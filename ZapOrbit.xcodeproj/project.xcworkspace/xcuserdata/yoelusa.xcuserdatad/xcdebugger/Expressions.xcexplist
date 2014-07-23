@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "__57-[YGLocallyViewController renderListingIcon:atIndexPath:]_block_invoke_2:YGLocallyViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "p [myImageView contentMode]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

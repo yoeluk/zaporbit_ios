@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>CB98A5D5-0835-4459-8964-D69581219B1B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ZapOrbit</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>CB440F0D-7F28-4E41-8F7F-A5D87FC3CA70</key>
+		<string>http://Yoels-iMac-OSX-8.local/git/ZO_Repo1.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ZapOrbit.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>CB440F0D-7F28-4E41-8F7F-A5D87FC3CA70</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://Yoels-iMac-OSX-8.local/git/ZO_Repo1.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>CB440F0D-7F28-4E41-8F7F-A5D87FC3CA70</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CB440F0D-7F28-4E41-8F7F-A5D87FC3CA70</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ZapOrbit</string>
+		</dict>
+	</array>
+</dict>
+</plist>
