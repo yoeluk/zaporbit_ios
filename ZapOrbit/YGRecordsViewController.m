@@ -8,7 +8,7 @@
 
 #import "YGRecordsViewController.h"
 #import "YGStarRateView.h"
-#import "YGBlockerView.h"
+//#import "YGBlockerView.h"
 
 @interface YGRecordsViewController ()
 
@@ -767,7 +767,8 @@
 }
 
 -(void)configureFeedbackView {
-	YGBlockerView *blocker = [[YGBlockerView alloc] initWithFrame:CGRectMake(0, 64, self.tableView.frame.size.width, self.tableView.frame.size.height)];
+	
+	UIView *blocker = [[UIView alloc] initWithFrame:CGRectMake(0, 64, self.tableView.frame.size.width, self.tableView.frame.size.height)];
 	[blocker setBackgroundColor:[UIColor colorWithWhite:0.9 alpha:0.98]];
 	blocker.userInteractionEnabled = YES;
 	blocker.tag = 14;
