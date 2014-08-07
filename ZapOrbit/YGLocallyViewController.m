@@ -123,7 +123,7 @@
 	if (status == kCLAuthorizationStatusNotDetermined) {
 		if ([[[UIDevice currentDevice] systemVersion] floatValue] > 7.1) {
 			//[locationManager requestWhenInUseAuthorization];
-//#warning remind me to add logic to alert the use the user that the app needs access to location services
+#warning uncomment the above line for iOS8 !
 		}
 	}
 }
