@@ -96,7 +96,7 @@
 		} else if ((surpluss < picWidthPlussSpacing/2 || (surpluss < picWidthPlussSpacing/easeFactor && velocity.x > easiness)) && _listing->index < itemsCount) {
 			targetContentOffset->x = scrollView.contentOffset.x;
 			CGFloat pointX = picWidthPlussSpacing*_listing->index;
-			CGFloat velocityX = velocity.x? velocity.x : 0.1;
+			CGFloat velocityX = (CGFloat) (velocity.x? velocity.x : 0.1);
 			if (velocity.x)
 				[UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:damping initialSpringVelocity:velocityX options:curveOption | UIViewAnimationOptionAllowUserInteraction animations:^{
 					[self setContentOffset:CGPointMake(pointX, 0)];
@@ -139,7 +139,7 @@
 }
 
 -(void)updatePictureContent:(NSNotification *)note {
-	ListingRecord *aListing = [[note userInfo] objectForKey:@"listing"];
+	ListingRecord *aListing = [note userInfo][@"listing"];
 	if (_listing == aListing) {
 		[self reloadData];
 	}
@@ -166,16 +166,16 @@
 	
 	if (_listing.pictures && _listing.pictures.count && indexPath.row < _listing.pictures.count) {
 		[[cell.contentView viewWithTag:101] removeFromSuperview];
-		NSString *imageName = [_listing.pictureNames objectAtIndex:indexPath.row];
+		NSString *imageName = (_listing.pictureNames)[(NSUInteger) indexPath.row];
 		if (![_listing.picturesCache objectForKey:imageName]) {
 			dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
 			dispatch_async(queue, ^{
-				NSString *fullPathToImage = [NSString stringWithFormat:@"%@", [_listing.pictures objectAtIndex:indexPath.row]];
+				NSString *fullPathToImage = [NSString stringWithFormat:@"%@", (_listing.pictures)[(NSUInteger) indexPath.row]];
 				UIImage *image = [UIImage imageWithContentsOfFile:fullPathToImage];
 				if (image) {
 					CGRect rect;
 					if (image.size.width < image.size.height) {
-						rect = CGRectMake(0, (image.size.height - image.size.width)/2, image.size.width, image.size.width/1.35);
+						rect = CGRectMake(0, (image.size.height - image.size.width)/2, image.size.width, (CGFloat) (image.size.width/1.35));
 						CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
 						image = [UIImage imageWithCGImage:imageRef];
 						CFRelease(imageRef);
@@ -207,15 +207,15 @@
 				pictureView = (UIImageView *)[cell.contentView viewWithTag:20];
 				[pictureView setImage:image];
 			} else {
-				UIImageView *pictureView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, pictureSize.width, pictureSize.height)];
-				[pictureView setImage:image];
+				UIImageView *pictureView1 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, pictureSize.width, pictureSize.height)];
+				[pictureView1 setImage:image];
 				UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(fullScreenPicture:)];
 				[tap setCancelsTouchesInView:NO];
-				[pictureView addGestureRecognizer:tap];
-				pictureView.contentMode = UIViewContentModeScaleAspectFit;
-				pictureView.userInteractionEnabled = YES;
-				pictureView.tag = 20;
-				[cell.contentView addSubview:pictureView];
+				[pictureView1 addGestureRecognizer:tap];
+				pictureView1.contentMode = UIViewContentModeScaleAspectFit;
+				pictureView1.userInteractionEnabled = YES;
+				pictureView1.tag = 20;
+                [cell.contentView addSubview:pictureView1];
 			}
 		}
 	} else {
@@ -238,11 +238,11 @@
 	UITapGestureRecognizer *oldTap = (UITapGestureRecognizer *)sender;
 	CGPoint touchedPoint = [oldTap locationInView:self];
 	NSIndexPath *indexPath = [self indexPathForItemAtPoint:touchedPoint];
-	NSString *fullPathToImage = [_listing.pictures objectAtIndex:indexPath.item];
+	NSString *fullPathToImage = (_listing.pictures)[(NSUInteger) indexPath.item];
 	UIImage *image = [UIImage imageWithContentsOfFile:fullPathToImage];
 	self->fullImageTransform = CGAffineTransformIdentity;
 	if (image.size.width > image.size.height) {
-		self->fullImageTransform = CGAffineTransformMakeRotation(M_PI/2);
+		self->fullImageTransform = CGAffineTransformMakeRotation((CGFloat) (M_PI/2));
 	}
 	if (!self->imageFullScreen) {
 		self->imageRectInRootView = [self.window convertRect:[oldTap view].bounds fromView:[oldTap view]];

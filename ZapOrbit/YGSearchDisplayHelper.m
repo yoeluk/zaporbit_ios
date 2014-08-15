@@ -56,14 +56,14 @@
 		[self.history removeAllObjects];
 		for (NSDictionary *historyDict in self->appSettings.searchHistory) {
 			NSString *regEx = [NSString stringWithFormat:@".*%@.*", [searchString lowercaseString]];
-			NSRange range = [[[historyDict objectForKey:@"searchString"] lowercaseString] rangeOfString:regEx options:NSRegularExpressionSearch];
+			NSRange range = [[historyDict[@"searchString"] lowercaseString] rangeOfString:regEx options:NSRegularExpressionSearch];
 			if (range.location != NSNotFound) {
-				[self.history addObject:[historyDict objectForKey:@"searchString"]];
+                [self.history addObject:historyDict[@"searchString"]];
 			} else {
-				regEx = [NSString stringWithFormat:@".*%@.*", [[historyDict objectForKey:@"searchString"] lowercaseString]];
+				regEx = [NSString stringWithFormat:@".*%@.*", [historyDict[@"searchString"] lowercaseString]];
 				range = [[searchString lowercaseString] rangeOfString:regEx options:NSRegularExpressionSearch];
 				if (range.location != NSNotFound) {
-					[self.history addObject:[historyDict objectForKey:@"searchString"]];
+                    [self.history addObject:historyDict[@"searchString"]];
 				}
 			}
 		}
@@ -88,7 +88,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-	cell.textLabel.text = [self.history objectAtIndex:indexPath.row];
+	cell.textLabel.text = (self.history)[(NSUInteger) indexPath.row];
     return cell;
 }
 

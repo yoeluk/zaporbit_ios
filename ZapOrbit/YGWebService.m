@@ -368,7 +368,7 @@ static NSString *password = @"bjmlBqAfiBEQ4oZfaGtI0oMcd5IGkCp";
 				 :(NSString *)service
 				 :(NSString *)method {
 	
-	BOOL isUpdating = [[service substringToIndex:6] isEqualToString:@"update"]? YES : NO;
+	BOOL isUpdating = [[service substringToIndex:6] isEqualToString:@"update"];
 	NSString *tick = [self getTick];
 	NSError *RequestError = nil;
 	NSDictionary *dictRequest = (NSDictionary *)dictData;

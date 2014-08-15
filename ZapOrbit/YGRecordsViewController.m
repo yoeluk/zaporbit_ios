@@ -24,10 +24,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-	pendingCount = [(NSMutableArray *)[self.records objectForKey:@"pendingRecords"] count];
-	processingCount = [(NSMutableArray *)[self.records objectForKey:@"processingRecords"] count];
-	completedCount = [(NSMutableArray *)[self.records objectForKey:@"completedRecords"] count];
-	failedCount = [(NSMutableArray *)[self.records objectForKey:@"failedRecords"] count];
+	pendingCount = [(NSMutableArray *) (self.records)[@"pendingRecords"] count];
+	processingCount = [(NSMutableArray *) (self.records)[@"processingRecords"] count];
+	completedCount = [(NSMutableArray *) (self.records)[@"completedRecords"] count];
+	failedCount = [(NSMutableArray *) (self.records)[@"failedRecords"] count];
 	
 	priceFormatter = [[NSNumberFormatter alloc] init];
 	[priceFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];
@@ -189,16 +189,16 @@
 	[[self.tableView viewWithTag:88] removeFromSuperview];
 	if ([sender.titleLabel.text isEqualToString:@"Pending"]) {
 		processingCount = completedCount = failedCount = 0;
-		pendingCount = pendingCount = [(NSMutableArray *)[self.records objectForKey:@"pendingRecords"] count];
+		pendingCount = pendingCount = [(NSMutableArray *) (self.records)[@"pendingRecords"] count];
 	} else if ([sender.titleLabel.text isEqualToString:@"Processing"]) {
 		pendingCount = completedCount = failedCount = 0;
-		processingCount = [(NSMutableArray *)[self.records objectForKey:@"processingRecords"] count];
+		processingCount = [(NSMutableArray *) (self.records)[@"processingRecords"] count];
 	} else if ([sender.titleLabel.text isEqualToString:@"Completed"]) {
 		pendingCount = processingCount = failedCount = 0;
-		completedCount = [(NSMutableArray *)[self.records objectForKey:@"completedRecords"] count];
+		completedCount = [(NSMutableArray *) (self.records)[@"completedRecords"] count];
 	} else if ([sender.titleLabel.text isEqualToString:@"Failed"]) {
 		pendingCount = completedCount = processingCount = 0;
-		failedCount = [(NSMutableArray *)[self.records objectForKey:@"failedRecords"] count];
+		failedCount = [(NSMutableArray *) (self.records)[@"failedRecords"] count];
 	}
 	[self.tableView reloadData];
 	if (!pendingCount && !processingCount && !completedCount && !failedCount) {
@@ -376,10 +376,10 @@
 	if (indexPath.section == 0) {
 		
 		cell = [tableView dequeueReusableCellWithIdentifier:pendingCellIdentifier forIndexPath:indexPath];
-		record = [[self.records objectForKey:@"pendingRecords"] objectAtIndex:indexPath.row];
+		record = [(self.records)[@"pendingRecords"] objectAtIndex:(NSUInteger) indexPath.row];
 				
 		titleLabel = (UILabel *)[cell.contentView viewWithTag:20];
-		titleLabel.text = [[[self.records objectForKey:@"pendingRecords"] objectAtIndex:indexPath.row] objectForKey:@"title"];
+		titleLabel.text = [[(self.records)[@"pendingRecords"] objectAtIndex:(NSUInteger) indexPath.row] objectForKey:@"title"];
 		
 		mainView = [[[cell.contentView viewWithTag:10] viewWithTag:25] viewWithTag:26];
 		secondaryView = [[[cell.contentView viewWithTag:10] viewWithTag:25] viewWithTag:27];
@@ -389,11 +389,11 @@
 		buyeridLabel = (UILabel *)[mainView viewWithTag:102];
 		transidLabel = (UILabel *)[secondaryView viewWithTag:101];
 		
-		offeridLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"offerid"]];
-		buyeridLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"buyerid"]];
-		transidLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"transid"]];
+		offeridLabel.text = [NSString stringWithFormat:@"%@", record[@"offerid"]];
+		buyeridLabel.text = [NSString stringWithFormat:@"%@", record[@"buyerid"]];
+		transidLabel.text = [NSString stringWithFormat:@"%@", record[@"transid"]];
 		
-		price = [record objectForKey:@"price"];
+		price = record[@"price"];
 		if ([price floatValue] >= 100) {
 			[priceFormatter setMaximumFractionDigits:0];
 			priceStr = [priceFormatter stringFromNumber:price];
@@ -402,9 +402,9 @@
 			priceStr = [priceFormatter stringFromNumber:price];
 		
 		[(UILabel *)[mainView viewWithTag:30] setText:priceStr];
-		[(UILabel *)[mainView viewWithTag:35] setText:[record objectForKey:@"description"]];
+        [(UILabel *) [mainView viewWithTag:35] setText:record[@"description"]];
 		
-		rawUpdateDate = [record objectForKey:@"updated_on"];
+		rawUpdateDate = record[@"updated_on"];
 		dateStr = [rawUpdateDate substringToIndex:rawUpdateDate.length-2];
 		date = [dateFormater dateFromString:dateStr];
 		[(UILabel *)[mainView viewWithTag:40] setText:[date formattedDateRelativeToNow:date]];
@@ -412,10 +412,10 @@
 	} else if (indexPath.section == 1) {
 		
 		cell = [tableView dequeueReusableCellWithIdentifier:processingCellIdentifier forIndexPath:indexPath];
-		record = [[self.records objectForKey:@"processingRecords"] objectAtIndex:indexPath.row];
+		record = [(self.records)[@"processingRecords"] objectAtIndex:(NSUInteger) indexPath.row];
 		
 		titleLabel = (UILabel *)[cell.contentView viewWithTag:20];
-		titleLabel.text = [[[self.records objectForKey:@"processingRecords"] objectAtIndex:indexPath.row] objectForKey:@"title"];
+		titleLabel.text = [[(self.records)[@"processingRecords"] objectAtIndex:(NSUInteger) indexPath.row] objectForKey:@"title"];
 		
 		mainView = [[[cell.contentView viewWithTag:10] viewWithTag:25] viewWithTag:26];
 		secondaryView = [[[cell.contentView viewWithTag:10] viewWithTag:25] viewWithTag:27];
@@ -425,11 +425,11 @@
 		buyeridLabel = (UILabel *)[mainView viewWithTag:102];
 		transidLabel = (UILabel *)[secondaryView viewWithTag:101];
 		
-		offeridLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"offerid"]];
-		buyeridLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"buyerid"]];
-		transidLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"transid"]];
+		offeridLabel.text = [NSString stringWithFormat:@"%@", record[@"offerid"]];
+		buyeridLabel.text = [NSString stringWithFormat:@"%@", record[@"buyerid"]];
+		transidLabel.text = [NSString stringWithFormat:@"%@", record[@"transid"]];
 		
-		price = [record objectForKey:@"price"];
+		price = record[@"price"];
 		if ([price floatValue] >= 100) {
 			[priceFormatter setMaximumFractionDigits:0];
 			priceStr = [priceFormatter stringFromNumber:price];
@@ -438,9 +438,9 @@
 			priceStr = [priceFormatter stringFromNumber:price];
 		
 		[(UILabel *)[mainView viewWithTag:30] setText:priceStr];
-		[(UILabel *)[mainView viewWithTag:35] setText:[record objectForKey:@"description"]];
+        [(UILabel *) [mainView viewWithTag:35] setText:record[@"description"]];
 		
-		rawUpdateDate = [record objectForKey:@"updated_on"];
+		rawUpdateDate = record[@"updated_on"];
 		dateStr = [rawUpdateDate substringToIndex:rawUpdateDate.length-2];
 		date = [dateFormater dateFromString:dateStr];
 		[(UILabel *)[mainView viewWithTag:40] setText:[date formattedDateRelativeToNow:date]];
@@ -448,10 +448,10 @@
 	} else if (indexPath.section == 2) {
 		
 		cell = [tableView dequeueReusableCellWithIdentifier:completedCellIdentifier forIndexPath:indexPath];
-		record = [[self.records objectForKey:@"completedRecords"] objectAtIndex:indexPath.row];
+		record = [(self.records)[@"completedRecords"] objectAtIndex:(NSUInteger) indexPath.row];
 		
 		titleLabel = (UILabel *)[cell.contentView viewWithTag:20];
-		titleLabel.text = [[[self.records objectForKey:@"completedRecords"] objectAtIndex:indexPath.row] objectForKey:@"title"];
+		titleLabel.text = [[(self.records)[@"completedRecords"] objectAtIndex:(NSUInteger) indexPath.row] objectForKey:@"title"];
 		
 		mainView = [[[cell.contentView viewWithTag:10] viewWithTag:25] viewWithTag:26];
 		secondaryView = [[[cell.contentView viewWithTag:10] viewWithTag:25] viewWithTag:27];
@@ -460,15 +460,15 @@
 		buyeridLabel = (UILabel *)[mainView viewWithTag:102];
 		transidLabel = (UILabel *)[secondaryView viewWithTag:101];
 		
-		offeridLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"offerid"]];
-		buyeridLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"buyerid"]];
-		transidLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"transid"]];
+		offeridLabel.text = [NSString stringWithFormat:@"%@", record[@"offerid"]];
+		buyeridLabel.text = [NSString stringWithFormat:@"%@", record[@"buyerid"]];
+		transidLabel.text = [NSString stringWithFormat:@"%@", record[@"transid"]];
 		
 		if (self->completedFeedback && self->completedFeedback.count) {
 			BOOL foundFeedback = NO;
 			NSDictionary *feedbackDict;
 			for (NSDictionary *feedback in self->completedFeedback) {
-				if ([[[feedback objectForKey:@"feedback"] objectForKey:@"transid"] integerValue] == [[record objectForKey:@"transid"] integerValue]) {
+				if ([[feedback[@"feedback"] objectForKey:@"transid"] integerValue] == [record[@"transid"] integerValue]) {
 					foundFeedback = YES;
 					feedbackDict = feedback;
 					break;
@@ -483,13 +483,13 @@
 					[ratingView setRatingTintColor:[UIColor colorWithRed:0 green:195/255.f blue:1 alpha:1]];
 					[ratingView setRatingTrackColor:[UIColor colorWithRed:0 green:90/255.f blue:1 alpha:1]];
 					[secondaryView addSubview:ratingView];
-					[ratingView setRating:[[feedbackDict objectForKey:@"rating"] floatValue]/5 animated:NO];
+					[ratingView setRating:[feedbackDict[@"rating"] floatValue]/5 animated:NO];
 					UILabel *feedbackLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 40, 240, 35)];
 					[feedbackLabel setFont:[UIFont systemFontOfSize:14]];
 					[feedbackLabel setTextColor:[UIColor whiteColor]];
 					[feedbackLabel setNumberOfLines:2];
 					feedbackLabel.tag = 52;
-					[feedbackLabel setText:[NSString stringWithFormat:@"\"%@\"", [[feedbackDict objectForKey:@"feedback"] objectForKey:@"feedback"]]];
+					[feedbackLabel setText:[NSString stringWithFormat:@"\"%@\"", [feedbackDict[@"feedback"] objectForKey:@"feedback"]]];
 					[secondaryView addSubview:feedbackLabel];
 				}
 			} else {
@@ -499,7 +499,7 @@
 			}
 		} else [(UIButton *)[secondaryView viewWithTag:16] setHidden:NO];
 		
-		price = [record objectForKey:@"price"];
+		price = record[@"price"];
 		if ([price floatValue] >= 100) {
 			[priceFormatter setMaximumFractionDigits:0];
 			priceStr = [priceFormatter stringFromNumber:price];
@@ -508,9 +508,9 @@
 			priceStr = [priceFormatter stringFromNumber:price];
 		
 		[(UILabel *)[mainView viewWithTag:30] setText:priceStr];
-		[(UILabel *)[mainView viewWithTag:35] setText:[record objectForKey:@"description"]];
+        [(UILabel *) [mainView viewWithTag:35] setText:record[@"description"]];
 		
-		rawUpdateDate = [record objectForKey:@"updated_on"];
+		rawUpdateDate = record[@"updated_on"];
 		dateStr = [rawUpdateDate substringToIndex:rawUpdateDate.length-2];
 		date = [dateFormater dateFromString:dateStr];
 		[(UILabel *)[mainView viewWithTag:40] setText:[date formattedDateRelativeToNow:date]];
@@ -518,10 +518,10 @@
 	} else if (indexPath.section == 3) {
 		
 		cell = [tableView dequeueReusableCellWithIdentifier:failedCellIdentifier forIndexPath:indexPath];
-		record = [[self.records objectForKey:@"failedRecords"] objectAtIndex:indexPath.row];
+		record = [(self.records)[@"failedRecords"] objectAtIndex:(NSUInteger) indexPath.row];
 		
 		titleLabel = (VALabel *)[cell.contentView viewWithTag:20];
-		titleLabel.text = [record objectForKey:@"title"];
+		titleLabel.text = record[@"title"];
 		
 		mainView = [[[cell.contentView viewWithTag:10] viewWithTag:25] viewWithTag:26];
 		secondaryView = [[[cell.contentView viewWithTag:10] viewWithTag:25] viewWithTag:27];
@@ -530,15 +530,15 @@
 		buyeridLabel = (UILabel *)[mainView viewWithTag:102];
 		transidLabel = (UILabel *)[secondaryView viewWithTag:101];
 		
-		offeridLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"offerid"]];
-		buyeridLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"buyerid"]];
-		transidLabel.text = [NSString stringWithFormat:@"%@",[record objectForKey:@"transid"]];
+		offeridLabel.text = [NSString stringWithFormat:@"%@", record[@"offerid"]];
+		buyeridLabel.text = [NSString stringWithFormat:@"%@", record[@"buyerid"]];
+		transidLabel.text = [NSString stringWithFormat:@"%@", record[@"transid"]];
 		
 		if (self->failedFeedback && self->failedFeedback.count) {
 			BOOL foundFeedback = NO;
 			NSDictionary *feedbackDict;
 			for (NSDictionary *feedback in self->failedFeedback) {
-				if ([[feedback objectForKey:@"transid"] integerValue] == [[record objectForKey:@"transid"] integerValue]) {
+				if ([feedback[@"transid"] integerValue] == [record[@"transid"] integerValue]) {
 					foundFeedback = YES;
 					feedbackDict = feedback;
 					break;
@@ -552,7 +552,7 @@
 					[feedbackLabel setTextColor:[UIColor whiteColor]];
 					[feedbackLabel setNumberOfLines:2];
 					feedbackLabel.tag = 52;
-					[feedbackLabel setText:[NSString stringWithFormat:@"\"%@\"", [feedbackDict objectForKey:@"feedback"]]];
+					[feedbackLabel setText:[NSString stringWithFormat:@"\"%@\"", feedbackDict[@"feedback"]]];
 					[secondaryView addSubview:feedbackLabel];
 				}
 			} else {
@@ -561,7 +561,7 @@
 			}
 		} else [(UIButton *)[secondaryView viewWithTag:16] setHidden:NO];
 		
-		price = [record objectForKey:@"price"];
+		price = record[@"price"];
 		if ([price floatValue] >= 100) {
 			[priceFormatter setMaximumFractionDigits:0];
 			priceStr = [priceFormatter stringFromNumber:price];
@@ -570,9 +570,9 @@
 			priceStr = [priceFormatter stringFromNumber:price];
 		
 		[(UILabel *)[mainView viewWithTag:30] setText:priceStr];
-		[(UILabel *)[mainView viewWithTag:35] setText:[record objectForKey:@"description"]];
+        [(UILabel *) [mainView viewWithTag:35] setText:record[@"description"]];
 		
-		rawUpdateDate = [record objectForKey:@"updated_on"];
+		rawUpdateDate = record[@"updated_on"];
 		dateStr = [rawUpdateDate substringToIndex:rawUpdateDate.length-2];
 		date = [dateFormater dateFromString:dateStr];
 		[(UILabel *)[mainView viewWithTag:40] setText:[date formattedDateRelativeToNow:date]];
@@ -598,33 +598,33 @@
 		NSData *listingData = [NSData dataWithContentsOfURL:listingURL];
 		if (listingData) {
 			NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:listingData options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
-			NSDictionary *listDict = [response objectForKey:@"listing"];
-			NSDictionary *locDict = [response objectForKey:@"location"];
-			NSDictionary *userDict = [response objectForKey:@"user"];
+			NSDictionary *listDict = response[@"listing"];
+			NSDictionary *locDict = response[@"location"];
+			NSDictionary *userDict = response[@"user"];
 			YGUser *user = [[YGUser alloc] init];
-			user.id = [[userDict objectForKey:@"id"] intValue];
-			user.name = [userDict objectForKey:@"name"];
-			user.surname = [userDict objectForKey:@"surname"];
-			user.email = [userDict objectForKey:@"email"];
-			user.fbuserid = [userDict objectForKey:@"fbuserid"];
+			user.id = [userDict[@"id"] intValue];
+			user.name = userDict[@"name"];
+			user.surname = userDict[@"surname"];
+			user.email = userDict[@"email"];
+			user.fbuserid = userDict[@"fbuserid"];
 			
 			ListingRecord *listing = [[ListingRecord alloc] init];
-			listing.id = [NSNumber numberWithInt:[[listDict objectForKey:@"id"] intValue]];
-			listing.title = [listDict objectForKey:@"title"];
-			listing.description = [listDict objectForKey:@"description"];
+			listing.id = @([listDict[@"id"] intValue]);
+			listing.title = listDict[@"title"];
+			listing.description = listDict[@"description"];
 			listing.pictures = [[NSMutableArray alloc] initWithCapacity:5];
-			listing.pictureNames = [listDict objectForKey:@"pictures"];
-			listing.price = [NSNumber numberWithFloat:[[listDict objectForKey:@"price"] floatValue]];
-			listing.highlight = [[listDict objectForKey:@"highlight"] boolValue];
-			listing.waggle = [[listDict objectForKey:@"waggle"] boolValue];
-			listing.shop = [listDict objectForKey:@"shop"];
+			listing.pictureNames = listDict[@"pictures"];
+			listing.price = @([listDict[@"price"] floatValue]);
+			listing.highlight = [listDict[@"highlight"] boolValue];
+			listing.waggle = [listDict[@"waggle"] boolValue];
+			listing.shop = listDict[@"shop"];
 			listing.picturesCache = [[NSCache alloc] init];
-			listing.telephone = [listDict objectForKey:@"telephone"];
+			listing.telephone = listDict[@"telephone"];
 			if ([listing.telephone isEqual:[NSNull null]]) {
 				listing.telephone = Nil;
 			}
-			listing.userid = [[listDict objectForKey:@"userid"] intValue];
-			NSString *rawUpdateDate = [listDict objectForKey:@"updated_on"];
+			listing.userid = [listDict[@"userid"] intValue];
+			NSString *rawUpdateDate = listDict[@"updated_on"];
 			NSString *dateStr = [rawUpdateDate substringToIndex:rawUpdateDate.length-2];
 			NSDate *date = [dateFormater dateFromString:dateStr];
 			listing.updated_on = [date formattedDateRelativeToNow:date];
@@ -632,7 +632,7 @@
 			listing.user = user;
 			
 			UINavigationController *itemDetailNavViewCtrl = [self.navigationController.storyboard instantiateViewControllerWithIdentifier:@"navModalItem"];
-			YGDetailItemController *itemDetailViewCtrl = [[itemDetailNavViewCtrl childViewControllers] objectAtIndex:0];
+			YGDetailItemController *itemDetailViewCtrl = [itemDetailNavViewCtrl childViewControllers][0];
 			[itemDetailViewCtrl setListing:listing];
 			[itemDetailViewCtrl setPreviewing:YES];
 			[self configureDetailView:itemDetailViewCtrl buyerId:buyerid];
@@ -701,8 +701,7 @@
 			[sendButton setEnabled:NO];
 			[(UILabel *)[textView viewWithTag:23] setTextColor:[UIColor redColor]];
 		} else {
-			if (characterCount > 0) [sendButton setEnabled:YES];
-			else [sendButton setEnabled:NO];
+            [sendButton setEnabled:characterCount > 0];
 			[(UILabel *)[textView viewWithTag:23] setTextColor:[UIColor lightGrayColor]];
 		}
 		CGPoint startPosition = [aTextView caretRectForPosition:aTextView.beginningOfDocument].origin;
@@ -726,8 +725,8 @@
 -(CGRect)getRectFromTwoPoints:(CGPoint)p1 andPoint:(CGPoint)p2 {
 	return CGRectMake(MIN(p1.x, p2.x),
 					  MIN(p1.y, p2.y),
-					  fabs(p1.x - p2.x),
-					  fabs(p1.y - p2.y));
+            (CGFloat) fabs(p1.x - p2.x),
+            (CGFloat) fabs(p1.y - p2.y));
 }
 
 -(void)dismissFeedback:(id)sender {
@@ -850,7 +849,7 @@
 	NSNumber *transid;
 	if ([sender isKindOfClass:[UIButton class]]) {
 		superview = [(UIButton *)sender superview];
-		userid = [NSNumber numberWithInt:(int)((UIButton *)sender).tag];
+		userid = @((int) ((UIButton *) sender).tag);
 	}
 	NSString *feedback;
 	NSNumber *rating;
@@ -861,7 +860,7 @@
 			} else if (subview.tag == 42) {
 				rating = [(YGStarRateView *)subview rating];
 			} else if ([subview isKindOfClass:[UILabel class]]) {
-				transid = [NSNumber numberWithInt:(int)((UILabel *)subview).tag];
+				transid = @((int) ((UILabel *) subview).tag);
 			}
 		}
 	}
@@ -877,11 +876,11 @@
 	NSNumber *userid;
 	NSNumber *transid;
 	if (completedCount) {
-		NSDictionary *record = [[self.records objectForKey:@"completedRecords"] objectAtIndex:indexPath.row];
-		if ([record objectForKey:@"sellerid"]) {
-			userid = [record objectForKey:@"sellerid"];
-		} else userid = [record objectForKey:@"buyerid"];
-		transid = [record objectForKey:@"transid"];
+		NSDictionary *record = [(self.records)[@"completedRecords"] objectAtIndex:(NSUInteger) indexPath.row];
+		if (record[@"sellerid"]) {
+			userid = record[@"sellerid"];
+		} else userid = record[@"buyerid"];
+		transid = record[@"transid"];
 	}
 	UIView *accessoryView = [self feedbackViewWithFrame:CGRectMake(0, 0, 320, 117) forUser:userid forTransaction:transid];
 	[accessoryView addSubview:[self ratingView]];
@@ -898,13 +897,13 @@
 	NSNumber *transid;
 	NSDictionary *record;
 	if (completedCount) {
-		record = [[self.records objectForKey:@"completedRecords"] objectAtIndex:indexPath.row];
+		record = [(self.records)[@"completedRecords"] objectAtIndex:(NSUInteger) indexPath.row];
 	} else if (failedCount)
-		record = [[self.records objectForKey:@"failedRecords"] objectAtIndex:indexPath.row];
-	if ([record objectForKey:@"sellerid"]) {
-		userid = [record objectForKey:@"sellerid"];
-	} else userid = [record objectForKey:@"buyerid"];
-	transid = [record objectForKey:@"transid"];
+		record = [(self.records)[@"failedRecords"] objectAtIndex:(NSUInteger) indexPath.row];
+	if (record[@"sellerid"]) {
+		userid = record[@"sellerid"];
+	} else userid = record[@"buyerid"];
+	transid = record[@"transid"];
 	UIView *accessoryView = [self feedbackViewWithFrame:CGRectMake(0, 0, 320, 80) forUser:userid forTransaction:transid];
 	self->dTextView.inputAccessoryView = accessoryView;
 	[self->dTextView becomeFirstResponder];
@@ -915,17 +914,17 @@
 	
 	NSMutableArray *completedTransids = [[NSMutableArray alloc] initWithCapacity:2];
 	NSMutableArray *failedTransids = [[NSMutableArray alloc] initWithCapacity:2];
-	int completedLength = (int)[[self.records objectForKey:@"completedRecords"] count];
-	int failedLength = (int)[[self.records objectForKey:@"failedRecords"] count];
+	int completedLength = (int)[(self.records)[@"completedRecords"] count];
+	int failedLength = (int)[(self.records)[@"failedRecords"] count];
 	
 	if (completedLength) {
-		for (NSDictionary *record in [self.records objectForKey:@"completedRecords"]) {
-			[completedTransids addObject:[record objectForKey:@"transid"]];
+		for (NSDictionary *record in (self.records)[@"completedRecords"]) {
+            [completedTransids addObject:record[@"transid"]];
 		}
 	}
 	if (failedLength) {
-		for (NSDictionary *record in [self.records objectForKey:@"failedRecords"]) {
-			[failedTransids addObject:[record objectForKey:@"transid"]];
+		for (NSDictionary *record in (self.records)[@"failedRecords"]) {
+            [failedTransids addObject:record[@"transid"]];
 		}
 	}
 	
@@ -953,8 +952,8 @@
 																if (error == nil && [(NSHTTPURLResponse *)response statusCode] == 200) {
 																	NSDictionary *dataObj = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
 																	if ([dataObj[@"status"] isEqualToString:@"OK"]) {
-																		if ([dataObj objectForKey:@"completedFeedbacks"]) self->completedFeedback = [dataObj objectForKey:@"completedFeedbacks"];
-																		if ([dataObj objectForKey:@"failedFeedbacks"]) self->failedFeedback = [dataObj objectForKey:@"failedFeedbacks"];
+																		if (dataObj[@"completedFeedbacks"]) self->completedFeedback = dataObj[@"completedFeedbacks"];
+																		if (dataObj[@"failedFeedbacks"]) self->failedFeedback = dataObj[@"failedFeedbacks"];
 																	}
 																}
 															}];

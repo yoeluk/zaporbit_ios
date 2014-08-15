@@ -190,9 +190,9 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	NSString *urlString = @"addmerchant";
 	
 	NSMutableDictionary *merchantData = [[NSMutableDictionary alloc] initWithCapacity:3];
-	[merchantData setObject:appSettings.sellerIdentifier forKey:@"identifier"];
-	[merchantData setObject:appSettings.sellerSecret forKey:@"secret"];
-	[merchantData setObject:[NSNumber numberWithInteger:userInfo.user.id] forKey:@"userid"];
+	merchantData[@"identifier"] = appSettings.sellerIdentifier;
+	merchantData[@"secret"] = appSettings.sellerSecret;
+    merchantData[@"userid"] = @(userInfo.user.id);
 	YGWebService *ws = [YGWebService initWithDelegate:self];
 	[ws addMerchantDataForUser:merchantData withService:urlString andMethod:@"POST"];
 }

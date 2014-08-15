@@ -66,20 +66,19 @@ static int locationObservanceContext;
 	[waypointStrings_ addObject:currPositionStr];
 	if([waypointStrings_ count] > 1){
 		NSString *sensor = @"false";
-		NSArray *parameters = [NSArray arrayWithObjects:sensor, waypointStrings_, nil];
-		NSArray *keys = [NSArray arrayWithObjects:@"sensor", @"waypoints", nil];
-		NSDictionary *query = [NSDictionary dictionaryWithObjects:parameters
-														  forKeys:keys];
+		NSArray *parameters = @[sensor, waypointStrings_];
+		NSArray *keys = @[@"sensor", @"waypoints"];
+		NSDictionary *query = @{keys : parameters};
 		YGDirectionServices *dws= [YGDirectionServices initWithDelegate:self];
 		[dws requestDirectionsForListing:query];
 	}
 }
 
 -(void)coughDirectionData:(NSDictionary *)json {
-	NSDictionary *routes = [json objectForKey:@"routes"][0];
+	NSDictionary *routes = json[@"routes"][0];
 	
-	NSDictionary *route = [routes objectForKey:@"overview_polyline"];
-	NSString *overview_route = [route objectForKey:@"points"];
+	NSDictionary *route = routes[@"overview_polyline"];
+	NSString *overview_route = route[@"points"];
 	GMSPath *path = [GMSPath pathFromEncodedPath:overview_route];
 	GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
 	polyline.map = mapView_;
@@ -111,8 +110,8 @@ static int locationObservanceContext;
                        context:(void *)context {
 	if (!firstLocationUpdate_ && context == &locationObservanceContext) {
 		firstLocationUpdate_ = YES;
-		if ([change objectForKey:NSKeyValueChangeNewKey]) {
-			CLLocation *location = [change objectForKey:NSKeyValueChangeNewKey];
+		if (change[NSKeyValueChangeNewKey]) {
+			CLLocation *location = change[NSKeyValueChangeNewKey];
 			mapView_.camera = [GMSCameraPosition cameraWithTarget:location.coordinate
 															 zoom:15];
 		}
@@ -126,8 +125,8 @@ static int locationObservanceContext;
 - (IBAction)mapWithDrivingDirections:(id)sender {
 	NSURL *testURL = [NSURL URLWithString:@"comgooglemaps-x-callback://"];
 	NSString *directionsRequest = [NSString stringWithFormat:@"%@%@",[NSString stringWithFormat:@"?daddr=%f,%f",
-																	  [[_listing.location objectForKey:@"latitude"] floatValue],
-																	  [[_listing.location objectForKey:@"longitude"] floatValue]],
+																	  [(_listing.location)[@"latitude"] floatValue],
+																	  [(_listing.location)[@"longitude"] floatValue]],
 								   @"&x-success=zaporbit://?resume=true&x-source=ZapOrbit"];
 	if ([[UIApplication sharedApplication] canOpenURL:testURL]) {
 		directionsRequest = [NSString stringWithFormat:@"%@%@", @"comgooglemaps-x-callback://", directionsRequest];

@@ -18,7 +18,7 @@
 @property (nonatomic, strong) NSNumber *id;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) UIImage *pic;
-@property (nonatomic, strong) NSString *description;
+@property (atomic, copy) NSString *description;
 @property (nonatomic, strong) NSString *telephone;
 @property (nonatomic, strong) NSString *imageURLString;
 @property (nonatomic, strong) NSNumber *price;

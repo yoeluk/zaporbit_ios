@@ -118,16 +118,16 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	
 	NSMutableDictionary *feedbackDict = [[NSMutableDictionary alloc] initWithCapacity:3];
-	[feedbackDict setObject:feedback forKey:@"feedback"];
-	[feedbackDict setObject:[NSNumber numberWithLong:self->userInfo.user.id] forKey:@"by_userid"];
-	[feedbackDict setObject:userid forKey:@"userid"];
-	[feedbackDict setObject:transid forKey:@"transid"];
+	feedbackDict[@"feedback"] = feedback;
+	feedbackDict[@"by_userid"] = @(self->userInfo.user.id);
+	feedbackDict[@"userid"] = userid;
+	feedbackDict[@"transid"] = transid;
 	
 	NSMutableDictionary *data = [[NSMutableDictionary alloc] initWithCapacity:3];
 	if (rating) {
-		[data setObject:rating forKey:@"rating"];
+		data[@"rating"] = rating;
 	}
-	[data setObject:feedbackDict forKey:@"feedback"];
+	data[@"feedback"] = feedbackDict;
     
 	//NSString * params =@"name=Ravi&loc=India&age=31&submit=true";
     //[urlRequest setHTTPMethod:@"POST"];

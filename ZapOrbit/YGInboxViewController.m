@@ -114,12 +114,12 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	//
 	NSMutableArray *sortedConvos = [[NSMutableArray alloc] initWithCapacity:5];
 	for (int i = 0; i < unsorted.count; ++i) {
-		NSArray *messages = [[[unsorted objectAtIndex:i] objectForKey:@"conversation"] objectForKey:@"messages"];
-		if ([[[messages objectAtIndex:0] objectForKey:@"received_status"] isEqualToString:@"unread"] && [[[messages objectAtIndex:0] objectForKey:@"senderid"] longLongValue] != userInfo.user.id) {
-			[sortedConvos insertObject:[unsorted objectAtIndex:i] atIndex:0];
+		NSArray *messages = [[unsorted[(NSUInteger) i] objectForKey:@"conversation"] objectForKey:@"messages"];
+		if ([[messages[0] objectForKey:@"received_status"] isEqualToString:@"unread"] && [[messages[0] objectForKey:@"senderid"] longLongValue] != userInfo.user.id) {
+            [sortedConvos insertObject:unsorted[(NSUInteger) i] atIndex:0];
 			//[sortedConvos addObject:[unsorted objectAtIndex:i]];
 		} else {
-			[sortedConvos addObject:[unsorted objectAtIndex:i]];
+            [sortedConvos addObject:unsorted[(NSUInteger) i]];
 			//[sortedConvos insertObject:[unsorted objectAtIndex:i] atIndex:0];
 		}
 	}
@@ -134,11 +134,7 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
     [super setEditing:editing animated:animated];
-    if (editing) {
-        [self.tableView setEditing:YES animated:YES];
-    } else {
-		[self.tableView setEditing:NO animated:YES];
-    }
+    [self.tableView setEditing:editing animated:YES];
 }
 
 -(void)updateConversations:(int)page {
@@ -147,8 +143,8 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:readURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		   if (data) {
 			   NSMutableDictionary *dataObj = (NSMutableDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
-			   if (dataObj && [[dataObj objectForKey:@"status"] isEqualToString:@"OK"]) {
-				   [self sortConverstionsUnreadFirst:[dataObj objectForKey:@"conversations"]];
+			   if (dataObj && [dataObj[@"status"] isEqualToString:@"OK"]) {
+                   [self sortConverstionsUnreadFirst:dataObj[@"conversations"]];
 				   self->appSettings.dataRetrievalDate = [NSDate date];
 				   dispatch_async(dispatch_get_main_queue(), ^{
 					   [self.progressView setProgress:1.0f animated:YES];
@@ -188,23 +184,23 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 -(void)deleteConvoOnServer:(NSDictionary *)convo fromIndexPath:(NSIndexPath *)indexPath {
 	
 	NSURL *readURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@leaveconvo/%lld/%ld", kUrlHead,
-												[[[convo objectForKey:@"conversation"] objectForKey:@"id"] longLongValue], (unsigned long)userInfo.user.id]];
+												[[convo[@"conversation"] objectForKey:@"id"] longLongValue], (unsigned long)userInfo.user.id]];
 	NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:readURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		if (data) {
 		   NSDictionary *dataObj = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
-		   if (dataObj && [[dataObj objectForKey:@"status"] isEqualToString:@"OK"]) {
+		   if (dataObj && [dataObj[@"status"] isEqualToString:@"OK"]) {
 			   dispatch_async(dispatch_get_main_queue(), ^{
 				   [self.tableView reloadData];
 			   });
 		   } else {
 			   dispatch_async(dispatch_get_main_queue(), ^{
-				   [self.conversations insertObject:convo atIndex:indexPath.row];
+                   [self.conversations insertObject:convo atIndex:(NSUInteger) indexPath.row];
 				   [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 			   });
 		   }
 		} else {
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[self.conversations insertObject:convo atIndex:indexPath.row];
+                [self.conversations insertObject:convo atIndex:(NSUInteger) indexPath.row];
 				[self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 			});
 		}
@@ -216,8 +212,8 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-		id deletedConvo = self.conversations[indexPath.row];
-		[self.conversations removeObjectAtIndex:indexPath.row];
+		id deletedConvo = self.conversations[(NSUInteger) indexPath.row];
+        [self.conversations removeObjectAtIndex:(NSUInteger) indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 		[self deleteConvoOnServer:deletedConvo fromIndexPath:indexPath];
     }
@@ -264,64 +260,64 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 		case 0:
 			cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier forIndexPath:indexPath];
 			
-			convo = [self.conversations objectAtIndex:indexPath.row];
-			conversation = [convo objectForKey:@"conversation"];
-			messages = [conversation objectForKey:@"messages"];
-			newestMessage = [messages objectAtIndex:messages.count-1];
-			user1 = [convo objectForKey:@"user1"];
-			user2 = [convo objectForKey:@"user2"];
+			convo = (self.conversations)[indexPath.row];
+			conversation = convo[@"conversation"];
+			messages = conversation[@"messages"];
+			newestMessage = messages[messages.count - 1];
+			user1 = convo[@"user1"];
+			user2 = convo[@"user2"];
 			
 			headingLabel = (UILabel *)[cell.contentView viewWithTag:10];
 			reLabel = (UILabel *)[cell.contentView viewWithTag:20];
 			messageLabel = (UILabel *)[cell.contentView viewWithTag:30];
 			
 			headingAttrs = [[NSMutableDictionary alloc] initWithCapacity:3];
-			[headingAttrs setObject:[UIFont systemFontOfSize:20] forKey:NSFontAttributeName];
-			[headingAttrs setObject:[UIColor grayColor] forKey:NSForegroundColorAttributeName];
-			[headingAttrs setObject:[NSNumber numberWithInt:-1] forKey:NSBaselineOffsetAttributeName];
+			headingAttrs[NSFontAttributeName] = [UIFont systemFontOfSize:20];
+			headingAttrs[NSForegroundColorAttributeName] = [UIColor grayColor];
+            headingAttrs[NSBaselineOffsetAttributeName] = @(-1);
 			
 			if ([messages count]) {
-				messageLabel.text = [newestMessage objectForKey:@"message"];
+				messageLabel.text = newestMessage[@"message"];
 			}
-			if ([[newestMessage objectForKey:@"senderid"] longLongValue] == userInfo.user.id) {
-				if ([[newestMessage objectForKey:@"senderid"] longLongValue] == [[user2 objectForKey:@"id"] longLongValue]) {
-					heading = [NSString stringWithFormat:@"me \u00BB %@ %@", [user1 objectForKey:@"name"], [user1 objectForKey:@"surname"]];
-				} else heading = [NSString stringWithFormat:@"me \u00BB %@ %@", [user2 objectForKey:@"name"], [user2 objectForKey:@"surname"]];
+			if ([newestMessage[@"senderid"] longLongValue] == userInfo.user.id) {
+				if ([newestMessage[@"senderid"] longLongValue] == [user2[@"id"] longLongValue]) {
+					heading = [NSString stringWithFormat:@"me \u00BB %@ %@", user1[@"name"], user1[@"surname"]];
+				} else heading = [NSString stringWithFormat:@"me \u00BB %@ %@", user2[@"name"], user2[@"surname"]];
 				attributedHeading = [[NSMutableAttributedString alloc] initWithString:heading];
 				[attributedHeading setAttributes:headingAttrs range:NSMakeRange(3, 2)];
 			} else {
-				if ([[newestMessage objectForKey:@"senderid"] longLongValue] == [[user2 objectForKey:@"id"] longLongValue]) {
-					heading = [NSString stringWithFormat:@"%@ %@ \u00BB me", [user2 objectForKey:@"name"], [user2 objectForKey:@"surname"]];
-				} else heading = [NSString stringWithFormat:@"%@ %@ \u00BB me", [user1 objectForKey:@"name"], [user1 objectForKey:@"surname"]];
+				if ([newestMessage[@"senderid"] longLongValue] == [user2[@"id"] longLongValue]) {
+					heading = [NSString stringWithFormat:@"%@ %@ \u00BB me", user2[@"name"], user2[@"surname"]];
+				} else heading = [NSString stringWithFormat:@"%@ %@ \u00BB me", user1[@"name"], user1[@"surname"]];
 				attributedHeading = [[NSMutableAttributedString alloc] initWithString:heading];
 				[attributedHeading setAttributes:headingAttrs range:NSMakeRange(heading.length-5, 2)];
 			}
 			if ([messages count] > 1) {
 				int count = 1;
 				for (NSDictionary *message in messages) {
-					if ([[message objectForKey:@"senderid"] longLongValue] == [[newestMessage objectForKey:@"senderid"] longLongValue]) {
+					if ([message[@"senderid"] longLongValue] == [newestMessage[@"senderid"] longLongValue]) {
 						++count;
 					}
 				}
 				if (count > 1) {
 					attributedStrCount = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %d", count]];
 					countAttrs = [[NSMutableDictionary alloc] initWithCapacity:3];
-					[countAttrs setObject:[UIFont systemFontOfSize:13] forKey:NSFontAttributeName];
-					[countAttrs setObject:[UIColor grayColor] forKey:NSForegroundColorAttributeName];
-					[countAttrs setObject:[NSNumber numberWithInt:0] forKey:NSBaselineOffsetAttributeName];
+					countAttrs[NSFontAttributeName] = [UIFont systemFontOfSize:13];
+					countAttrs[NSForegroundColorAttributeName] = [UIColor grayColor];
+                    countAttrs[NSBaselineOffsetAttributeName] = @0;
 					[attributedStrCount setAttributes:countAttrs range:NSMakeRange(0, attributedStrCount.length)];
 					[attributedHeading appendAttributedString:attributedStrCount];
 				}
 			}
 			
-			if ([[newestMessage objectForKey:@"received_status"] isEqualToString:@"unread"] && [[newestMessage objectForKey:@"senderid"] longLongValue] != userInfo.user.id)
+			if ([newestMessage[@"received_status"] isEqualToString:@"unread"] && [newestMessage[@"senderid"] longLongValue] != userInfo.user.id)
 				headingLabel.textColor = [UIColor colorWithRed:0 green:112/255.f blue:1 alpha:1];
 			else
 				headingLabel.textColor = [UIColor blackColor];
 			
 			
 			headingLabel.attributedText = attributedHeading;
-			reLabel.text = [NSString stringWithFormat:@"re: %@", [conversation objectForKey:@"title"]];
+			reLabel.text = [NSString stringWithFormat:@"re: %@", conversation[@"title"]];
 			
 			if (indexPath.row == 0) {
 				
@@ -345,29 +341,29 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	NSArray *messages;
 	NSDictionary *user1;
 	NSDictionary *user2;
-	convo = [self.conversations objectAtIndex:indexPath.row];
-	conversation = [convo objectForKey:@"conversation"];
-	messages = [conversation objectForKey:@"messages"];
-	user1 = [convo objectForKey:@"user1"];
-	user2 = [convo objectForKey:@"user2"];
+	convo = (self.conversations)[(NSUInteger) indexPath.row];
+	conversation = convo[@"conversation"];
+	messages = conversation[@"messages"];
+	user1 = convo[@"user1"];
+	user2 = convo[@"user2"];
 	BOOL foundUnread = false;
 	for (NSMutableDictionary *message in messages) {
-		if ([[message objectForKey:@"received_status"] isEqualToString:@"unread"] && [[[messages objectAtIndex:0] objectForKey:@"senderid"] longLongValue] != userInfo.user.id) {
+		if ([message[@"received_status"] isEqualToString:@"unread"] && [[messages[0] objectForKey:@"senderid"] longLongValue] != userInfo.user.id) {
 			foundUnread = true;
 			break;
 		}
 	}
 	if (foundUnread) {
 		NSURL *readURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@markconvoread/%lld", kUrlHead,
-														[[[[self.conversations objectAtIndex:indexPath.row] objectForKey:@"conversation"] objectForKey:@"id"] longLongValue]]];
+														[[[(self.conversations)[(NSUInteger) indexPath.row] objectForKey:@"conversation"] objectForKey:@"id"] longLongValue]]];
 		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:readURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			if (data) {
 				NSDictionary *dataObj = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
-				if (dataObj && [[dataObj objectForKey:@"status"] isEqualToString:@"OK"]) {
+				if (dataObj && [dataObj[@"status"] isEqualToString:@"OK"]) {
 					
 					for (NSMutableDictionary *message in messages) {
-						if ([[message objectForKey:@"received_status"] isEqualToString:@"unread"] && [[message objectForKey:@"senderid"] longLongValue] != userInfo.user.id) {
-							[message setObject:@"read" forKey:@"received_status"];
+						if ([message[@"received_status"] isEqualToString:@"unread"] && [message[@"senderid"] longLongValue] != userInfo.user.id) {
+							message[@"received_status"] = @"read";
 						}
 					}
 					dispatch_async(dispatch_get_main_queue(), ^{
@@ -379,14 +375,14 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 		[session resume];
 	}
 	NSMutableDictionary *convoDetails = [[NSMutableDictionary alloc] initWithCapacity:3];
-	if ([[user1 objectForKey:@"id"] longLongValue] == userInfo.user.id) {
-		[convoDetails setObject:user2 forKey:@"toUser"];
-	} else [convoDetails setObject:user1 forKey:@"toUser"];
-	[convoDetails setObject:userInfo.user forKey:@"me"];
-	[convoDetails setObject:[conversation objectForKey:@"id"] forKey:@"convid"];
-	[convoDetails setObject:convo forKey:@"convo"];
-	[convoDetails setObject:self.conversations forKey:@"allConversations"];
-	[convoDetails setObject:messages forKey:@"messages"];
+	if ([user1[@"id"] longLongValue] == userInfo.user.id) {
+		convoDetails[@"toUser"] = user2;
+	} else convoDetails[@"toUser"] = user1;
+	convoDetails[@"me"] = userInfo.user;
+    convoDetails[@"convid"] = conversation[@"id"];
+	convoDetails[@"convo"] = convo;
+	convoDetails[@"allConversations"] = self.conversations;
+	convoDetails[@"messages"] = messages;
 	[self performSegueWithIdentifier:@"convoColSegue" sender:convoDetails];
 }
 

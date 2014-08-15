@@ -48,6 +48,11 @@
 	return view;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	float height = 44;
+	return height;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
     return 1;
@@ -75,7 +80,7 @@
 }
 
 - (IBAction)logmeOut:(UISwitch *)sender {
-	self.appSettings.logmeOut = [NSNumber numberWithBool:sender.on];
+	self.appSettings.logmeOut = @(sender.on);
 }
 
 /*

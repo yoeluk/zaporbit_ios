@@ -2365,7 +2365,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QXL-rr-fkk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2673" y="-753"/>
+            <point key="canvasLocation" x="2600" y="-753"/>
         </scene>
         <!--New Message-->
         <scene sceneID="dDX-c5-NnW">
@@ -2447,7 +2447,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5Ot-Ns-31h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3153" y="-753"/>
+            <point key="canvasLocation" x="3080" y="-753"/>
         </scene>
         <!--Shopping-->
         <scene sceneID="cUi-kZ-frf">

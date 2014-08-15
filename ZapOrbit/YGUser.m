@@ -17,12 +17,12 @@
 
 +(YGUser *)userWithDictionary:(NSDictionary *)locationDictionary {
 	YGUser *newUser = [[YGUser alloc] init];
-	newUser.id = [[locationDictionary objectForKey:@"id"] integerValue];
-	newUser.name = [locationDictionary objectForKey:@"name"];
-	newUser.surname = [locationDictionary objectForKey:@"surname"];
-	newUser.fbuserid = [locationDictionary objectForKey:@"fbuserid"];
-	newUser.email = [locationDictionary objectForKey:@"email"];
-	newUser.isMerchant = [locationDictionary objectForKey:@"isMerchant"];
+	newUser.id = [locationDictionary[@"id"] integerValue];
+	newUser.name = locationDictionary[@"name"];
+	newUser.surname = locationDictionary[@"surname"];
+	newUser.fbuserid = locationDictionary[@"fbuserid"];
+	newUser.email = locationDictionary[@"email"];
+	newUser.isMerchant = locationDictionary[@"isMerchant"];
 	return newUser;
 }
 

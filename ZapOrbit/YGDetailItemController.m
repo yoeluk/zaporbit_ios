@@ -62,12 +62,12 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 			NSURL *userURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@getuserbyid/%@", kApiUrl, self.buyerId]];
 			NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:userURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 				if ([(NSHTTPURLResponse *)response statusCode] == 200 && data) {
-					NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
-					if (response && [[response objectForKey:@"status"] isEqualToString:@"OK"]) {
-						NSDictionary *userDict = [response objectForKey:@"user"];
+					NSDictionary *response1 = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
+					if (response1 && [response1[@"status"] isEqualToString:@"OK"]) {
+						NSDictionary *userDict = response1[@"user"];
 						YGUser *buyerUser = [YGUser userWithDictionary:userDict];
 						[self setUserAsBuyer:buyerUser];
-					} else NSLog(@"response:- %@", response);
+					} else NSLog(@"response1:- %@", response1);
 				} else NSLog(@"no user data");
 			}];
 			[session resume];
@@ -92,7 +92,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 
 -(void)shareOptions:(id)sender {
 	if (_listing.pictures.count) {
-		NSString *fullPathToImage = [_listing.pictures objectAtIndex:0];
+		NSString *fullPathToImage = (_listing.pictures)[0];
 		UIImage *image = [UIImage imageWithContentsOfFile:fullPathToImage];
 		
 		UIActivityViewController *activityController = [[UIActivityViewController alloc]
@@ -121,7 +121,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 	
 	CGFloat compression = 0.9f;
 	CGFloat maxCompression = 0.1f;
-	int maxFileSize = size*1024*1024;
+	int maxFileSize = (int) (size*1024*1024);
 	
 	NSData *imageData = UIImageJPEGRepresentation(image, compression);
 	
@@ -314,7 +314,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 	
 	CGSize size;
 	UIImage *image;
-	NSString *fullPathToImage = [_listing.pictures objectAtIndex:indexPath.row];
+	NSString *fullPathToImage = (_listing.pictures)[(NSUInteger) indexPath.row];
 	image = [UIImage imageWithContentsOfFile:fullPathToImage];
 	size = CGSizeMake(image.size.width*225/image.size.height, 225);
 	return size;
@@ -343,7 +343,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 			if (_listing.pictures && _listing.pictures.count) {
 				dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
 				dispatch_async(queue, ^{
-					NSString *fullPathToImage = [_listing.pictures objectAtIndex:indexPath.row];
+					NSString *fullPathToImage = (_listing.pictures)[(NSUInteger) indexPath.row];
 					image = [UIImage imageWithContentsOfFile:fullPathToImage];
 					size = CGSizeMake(image.size.width*226/image.size.height, 226);
 					//NSLog(@"size {%f, %f", size.width, size.height);
@@ -378,7 +378,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 	UITapGestureRecognizer *oldTap = (UITapGestureRecognizer *)sender;
 	self->fullImageTransform = CGAffineTransformIdentity;
 	if ([[oldTap view] frame].size.width > [[oldTap view] frame].size.height) {
-		self->fullImageTransform = CGAffineTransformMakeRotation(M_PI/2);
+		self->fullImageTransform = CGAffineTransformMakeRotation((CGFloat) (M_PI/2));
 	}
 	UIView *rootView = self.view;
 	if (!self->imageFullScreen) {
@@ -443,20 +443,20 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 			if (listing.pictures.count < listing.pictureNames.count) {
 				[self downloadPicturesInListing:listing index:index+1];
 			}
-			[self renderListingPicture:listing atIndex:index];
+            [self renderListingPicture:listing atIndex:(NSUInteger) index];
 		}];
 		[picturesDownloader startDownload:index];
 	}
 }
 
--(void)renderListingPicture:(ListingRecord *)listing atIndex:(int)index {
+-(void)renderListingPicture:(ListingRecord *)listing atIndex:(NSUInteger)index {
 	NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
 	dispatch_async(queue, ^{
-		UIImage *image = [UIImage imageWithContentsOfFile:[listing.pictures objectAtIndex:index]];
+		UIImage *image = [UIImage imageWithContentsOfFile:(listing.pictures)[(NSUInteger) index]];
 		NSAssert(image != nil, @"the image found is could not be loaded from disk");
-		[listing.picturesCache setObject:image forKey:[listing.pictureNames objectAtIndex:index]];
-		NSAssert([listing.picturesCache objectForKey:[listing.pictureNames objectAtIndex:index]] != nil, @"the image is not saved to the cache");
+        [listing.picturesCache setObject:image forKey:(listing.pictureNames)[(NSUInteger) index]];
+		NSAssert([listing.picturesCache objectForKey:(listing.pictureNames)[index]] != nil, @"the image is not saved to the cache");
 		dispatch_async(dispatch_get_main_queue(), ^{
 			UICollectionViewCell *cell = [_carousel cellForItemAtIndexPath:indexPath];
 			[(UIImageView *)[cell.contentView viewWithTag:20] setImage:image];
@@ -513,7 +513,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 
 -(void)coughRequestedData:(NSData *)data {
 	NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-	if (response && [[response objectForKey:@"status"] isEqualToString:@"OK"]) {
+	if (response && [response[@"status"] isEqualToString:@"OK"]) {
 		[self.navigationController popViewControllerAnimated:YES];
 	}
 }
@@ -523,16 +523,16 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 - (void)alertView:(UIAlertView *)alertView willDismissWithButtonIndex:(NSInteger)buttonIndex {
 	if (alertView.tag == 10 && [[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"OK"]) {
 		NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:5];
-		[dict setObject:@"pending" forKey:@"status"];
-		[dict setObject:_listing.title forKey:@"offer_title"];
-		[dict setObject:_listing.description forKey:@"offer_description"];
-		[dict setObject:_listing.price forKey:@"offer_price"];
+		dict[@"status"] = @"pending";
+		dict[@"offer_title"] = _listing.title;
+		dict[@"offer_description"] = _listing.description;
+		dict[@"offer_price"] = _listing.price;
 		NSLocale *locale = [NSLocale localeWithLocaleIdentifier:_listing.locale];
-		[dict setObject:[locale objectForKey:NSLocaleCurrencyCode] forKey:@"currency_code"];
-		[dict setObject:_listing.locale forKey:@"locale"];
-		[dict setObject:[NSNumber numberWithLong:userInfo.user.id] forKey:@"buyerid"];
-		[dict setObject:[NSNumber numberWithLong:_listing.userid] forKey:@"sellerid"];
-		[dict setObject:_listing.id forKey:@"offerid"];
+		dict[@"currency_code"] = [locale objectForKey:NSLocaleCurrencyCode];
+		dict[@"locale"] = _listing.locale;
+        dict[@"buyerid"] = @(userInfo.user.id);
+        dict[@"sellerid"] = @(_listing.userid);
+		dict[@"offerid"] = _listing.id;
 		YGWebService *ws = [YGWebService initWithDelegate:self];
 		[ws WSRequest:dict :@"createtransaction" :@"POST"];
 	}
@@ -566,7 +566,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 	UINavigationController *composerNav = [sb instantiateViewControllerWithIdentifier:@"composerNav"];
 	UIBarButtonItem *discardButton = [[UIBarButtonItem alloc] initWithTitle:@"Discard" style:UIBarButtonItemStylePlain target:self action:@selector(dismissController)];
 	[[composerNav.childViewControllers[0] navigationItem] setLeftBarButtonItem:discardButton];
-	NSDictionary *details = [[NSDictionary alloc] initWithObjectsAndKeys:_listing.user, @"toUser", _listing, @"listing", userInfo.user, @"me", nil];
+	NSDictionary *details = @{@"toUser" : _listing.user, @"listing" : _listing, @"me" : userInfo.user};
 	[composerNav.childViewControllers[0] setDetails:details];
 	[self presentViewController:composerNav animated:YES completion:^{
 		
@@ -593,7 +593,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 	if ([segue.identifier isEqualToString:@"mapSegue"]) {
 		UINavigationController *navController = [segue destinationViewController];
-		YGMapViewController *mapViewController = (YGMapViewController *)[[navController childViewControllers] objectAtIndex:0];
+		YGMapViewController *mapViewController = (YGMapViewController *) [navController childViewControllers][0];
 		mapViewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dissmissMapViewController:)];
 		[mapViewController setListing:_listing];
 		// Pass the selected object to the new view controller.

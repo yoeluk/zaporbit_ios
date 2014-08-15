@@ -57,10 +57,10 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 		if ([(NSHTTPURLResponse *)response statusCode] == 200 && data) {
 			dispatch_async(dispatch_get_main_queue(), ^{
 				NSDictionary *dataObj = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-				self->feedbacks = [dataObj objectForKey:@"feedbacks"];
-				self->rating = [dataObj objectForKey:@"rating"];
+				self->feedbacks = dataObj[@"feedbacks"];
+				self->rating = dataObj[@"rating"];
 				if (![self->rating isEqual:[NSNull null]]) {
-					float ratingValue = [[self->rating objectForKey:@"rating"] floatValue];
+					float ratingValue = [(self->rating)[@"rating"] floatValue];
 					[(YGRatingView *)[self.tableViewHeader viewWithTag:50] setRating:0 animated:NO];
 					[(YGRatingView *)[self.tableViewHeader viewWithTag:50] setRating:ratingValue animated:YES];
 				}
@@ -150,7 +150,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 				cellTitle.text = @"Ratings";
 				UILabel *amountLabel = (UILabel *)[cell.contentView viewWithTag:12];
 				if ([self->rating isEqual:[NSNull null]]) amountLabel.text = @"0";
-				else amountLabel.text = [NSString stringWithFormat:@"%ld", (long)[[self->rating objectForKey:@"total_ratings"] integerValue]];
+				else amountLabel.text = [NSString stringWithFormat:@"%ld", (long)[(self->rating)[@"total_ratings"] integerValue]];
 				[amountLabel sizeToFit];
 				CGRect rect = amountLabel.frame;
 				rect.size.height += 4;
@@ -167,7 +167,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 			cell = [tableView dequeueReusableCellWithIdentifier:feedbackCellIdentifier forIndexPath:indexPath];
 			cell.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
 			if (self->feedbacks) {
-				NSString *feedback = [[self->feedbacks objectAtIndex:indexPath.row] objectForKey:@"feedback"];
+				NSString *feedback = [(self->feedbacks)[(NSUInteger) indexPath.row] objectForKey:@"feedback"];
 				cell.textLabel.text = [NSString stringWithFormat:@"\"%@\"", feedback];
 				cell.textLabel.font = [UIFont systemFontOfSize:14];
 				cell.textLabel.numberOfLines = 2;

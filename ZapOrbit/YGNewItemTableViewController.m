@@ -8,12 +8,8 @@
 
 #import "YGNewItemTableViewController.h"
 #import "YGAppDelegate.h"
-#import "YGCarruselView.h"
 #import "ListingRecord.h"
 #import "GCPlaceholderTextView.h"
-#import "YGPicturesDownloader.h"
-#import "ZOLocation.h"
-#import "YGImage.h"
 
 #define LOCALE_IDENTIFIER [[NSLocale currentLocale] localeIdentifier]
 #define CURRECY_CODE [[NSLocale currentLocale] objectForKey:NSLocaleCurrencyCode]
@@ -108,7 +104,7 @@
 // updateImages is always called first when updating a listing
 -(void)updateImages:(id)sender {
 	if (_listingUpdate.pictures.count) {
-		NSString *fullPathToImage = [_listingUpdate.pictures objectAtIndex:0];
+		NSString *fullPathToImage = (_listingUpdate.pictures)[0];
 		NSData *imageData = [NSData dataWithContentsOfFile:fullPathToImage];
 		NSString *pictureName = [[fullPathToImage componentsSeparatedByString:@"/"] lastObject];
 		YGWebService *ws = [YGWebService initWithDelegate:self];
@@ -119,7 +115,7 @@
 
 -(void)coughUpdatingPictures:(NSData *)data {
 	NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-	if ([[response objectForKey:@"status"] isEqualToString:@"OK"]) {
+	if ([response[@"status"] isEqualToString:@"OK"]) {
 		if (_listingUpdate.pictures.count) {
 			[self updateImages:nil];
 		} else {
@@ -132,24 +128,24 @@
 	if ([userInfo user] && _listing.id) {
 		NSMutableDictionary *postDict = [[NSMutableDictionary alloc] initWithCapacity:5];
 		if (_listingUpdate.title) {
-			[postDict setObject:_listingUpdate.title forKey:@"title"];
+			postDict[@"title"] = _listingUpdate.title;
 		}
 		if (_listingUpdate.description) {
-			[postDict setObject:_listingUpdate.description forKey:@"description"];
+			postDict[@"description"] = _listingUpdate.description;
 		}
 		if (_listingUpdate.price) {
-			[postDict setObject:_listingUpdate.price forKey:@"price"];
-			[postDict setObject:_listingUpdate.locale forKey:@"locale"];
-			[postDict setObject:_listingUpdate.currency_code forKey:@"currency_code"];
+			postDict[@"price"] = _listingUpdate.price;
+			postDict[@"locale"] = _listingUpdate.locale;
+			postDict[@"currency_code"] = _listingUpdate.currency_code;
 		}
 		if (_listingUpdate.shop) {
-			[postDict setObject:_listingUpdate.shop forKey:@"shop"];
+			postDict[@"shop"] = _listingUpdate.shop;
 		}
 		if (_listingUpdate.pictureNames && _listingUpdate.pictureNames.count) {
-			[postDict setObject:_listingUpdate.pictureNames forKey:@"pictures"];
+			postDict[@"pictures"] = _listingUpdate.pictureNames;
 		}
-		[postDict setObject:[NSNumber numberWithBool:_listing.highlight] forKey:@"highlight"];
-		[postDict setObject:[NSNumber numberWithBool:_listing.waggle] forKey:@"waggle"];
+        postDict[@"highlight"] = @(_listing.highlight);
+        postDict[@"waggle"] = @(_listing.waggle);
 		if (postDict.count) {
 			YGWebService *ws = [YGWebService initWithDelegate:self];
 			[ws WSRequest:postDict :[NSString stringWithFormat:@"updatelisting/%@", _listing.id] :@"POST"];
@@ -160,14 +156,14 @@
 
 -(void)coughUpdatingResponse:(NSData *)data {
 	NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-	if ([[response objectForKey:@"status"] isEqualToString:@"OK"]) {
+	if ([response[@"status"] isEqualToString:@"OK"]) {
 		if ((_listingUpdate.highlight && _listingUpdate.highlight != self->isHighlighted) ||
 			(_listingUpdate.waggle && _listingUpdate.waggle != self->isWaggled)) {
 			[self upgradeLinsting:_listing.id isWaggle:_listingUpdate.waggle isHighlight:_listingUpdate.highlight];
 		} else [self.navigationController popViewControllerAnimated:YES];
 		_listingUpdate = [[ListingRecord alloc] init];
-	} else if ([[response objectForKey:@"status"] isEqualToString:@"KO"]) {
-		NSLog(@"there was an error: %@", [response objectForKey:@"message"]);
+	} else if ([response[@"status"] isEqualToString:@"KO"]) {
+		NSLog(@"there was an error: %@", response[@"message"]);
 	}
 }
 /* END UPDATING LISTING */
@@ -189,7 +185,7 @@
 // postImages is always called first when posting a listing
 -(void)postImages:(id)sender {
 	if (_listing.pictures.count) {
-		NSString *fullPathToImage = [_listing.pictures objectAtIndex:0];
+		NSString *fullPathToImage = (_listing.pictures)[0];
 		NSData *imageData = [NSData dataWithContentsOfFile:fullPathToImage];
 		NSString *pictureName = [[fullPathToImage componentsSeparatedByString:@"/"] lastObject];
 		YGWebService *ws = [YGWebService initWithDelegate:self];
@@ -200,18 +196,19 @@
 
 -(void)postListing:(id)sender {
 	if ([userInfo user]) {
-		NSDictionary *postDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-								  _listing.title, @"title",
-								  _listing.description, @"description",
-								  _listing.price, @"price",
-								  _listing.shop, @"shop",
-								  _listing.locale, @"locale",
-								  _listing.currency_code, @"currency_code",
-								  [NSNumber numberWithBool:false], @"highlight",
-								  [NSNumber numberWithBool:false], @"waggle",
-								  [NSNumber numberWithInteger:_listing.userid], @"userid",
-								  _listing.pictureNames, @"pictures",
-								  _listing.location, @"location", nil];
+		NSDictionary *postDict = @{
+                @"title" : _listing.title,
+                @"description" : _listing.description,
+                @"price" : _listing.price,
+                @"shop" : _listing.shop,
+                @"locale" : _listing.locale,
+                @"currency_code" : _listing.currency_code,
+                @"highlight" : @false,
+                @"waggle" : @false,
+                @"userid" : @(_listing.userid),
+                @"pictures" : _listing.pictureNames,
+                @"location" : _listing.location
+        };
 		YGWebService *ws = [YGWebService initWithDelegate:self];
 		[ws WSRequest:postDict :@"newlisting" :@"POST"];
 		[_listing.pictureNames removeAllObjects];
@@ -221,7 +218,7 @@
 // WS delegate callback for uploading pictures
 -(void)coughUploadingResponse:(NSData *)data {
 	NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-	if ([[response objectForKey:@"status"] isEqualToString:@"OK"]) {
+	if ([response[@"status"] isEqualToString:@"OK"]) {
 		if (_listing.pictures.count) {
 			[self postImages:nil];
 		} else {
@@ -233,9 +230,9 @@
 // WS delegate callback for new listing request
 -(void)coughRequestedData:(NSData *)data {
 	NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-	if ([[response objectForKey:@"status"] isEqualToString:@"OK"]) {
+	if ([response[@"status"] isEqualToString:@"OK"]) {
 		if (_listing.highlight || _listing.waggle) {
-			NSNumber *listingid = [response objectForKey:@"listingid"];
+			NSNumber *listingid = response[@"listingid"];
 			[self upgradeLinsting:listingid isWaggle:_listing.waggle isHighlight:_listing.highlight];
 		} else [self.navigationController popViewControllerAnimated:YES];
 	}
@@ -244,7 +241,7 @@
 
 -(NSString*)generateRandomString:(int)num {
 	NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@*_$";
-    NSMutableString* string = [NSMutableString stringWithCapacity:num];
+    NSMutableString* string = [NSMutableString stringWithCapacity:(NSUInteger) num];
     for (int i = 0; i < num; i++) {
         [string appendFormat:@"%C", [letters characterAtIndex:arc4random() % [letters length]]];
     }
@@ -273,9 +270,8 @@
 - (BOOL) startCameraControllerFromViewController: (UIViewController*) controller
 								   usingDelegate: (id <UIImagePickerControllerDelegate,
 												   UINavigationControllerDelegate>) delegate {
-	
-    if (([UIImagePickerController isSourceTypeAvailable:
-		  UIImagePickerControllerSourceTypeCamera] == NO)
+
+    if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]
 		|| (delegate == nil)
 		|| (controller == nil))
         return NO;
@@ -298,7 +294,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
 	[picker dismissViewControllerAnimated:YES completion:^{
-		if ([[[info objectForKey:UIImagePickerControllerMediaType] description] isEqualToString:@"public.image"]) {
+		if ([[info[UIImagePickerControllerMediaType] description] isEqualToString:@"public.image"]) {
 			NSIndexPath *picIndexPath = [NSIndexPath indexPathForRow:3 inSection:1];
 			UITableViewCell *picCell = [self.tableView cellForRowAtIndexPath:picIndexPath];
 			_picImage = [self compressForUpload:info[UIImagePickerControllerOriginalImage] scalingFactor:0.3f];
@@ -329,7 +325,7 @@
 					[_listingUpdate.pictures addObject:fullPath];
 					[_listingUpdate.pictureNames addObject:pictureName];
 				}
-				[self renderListingPicture:_listing atIndex:(int)_listing.pictures.count-1];
+                [self renderListingPicture:_listing atIndex:(NSUInteger) ((int) _listing.pictures.count - 1)];
 			}
 		}
 	}];
@@ -475,7 +471,7 @@
 					[currencyFormatter setLocale:locale];
 				}
 				if ([priceNumber floatValue] > 99.99) {
-					priceNumber = [NSNumber numberWithInt:ceilf([priceNumber floatValue])];
+					priceNumber = @((int) ceilf([priceNumber floatValue]));
 					[currencyFormatter setMaximumFractionDigits:0];
 					localizedMoneyString = [currencyFormatter stringFromNumber:priceNumber];
 					[currencyFormatter setMinimumFractionDigits:2];
@@ -521,8 +517,8 @@
 			waggle = (UISwitch *)[cell.contentView viewWithTag:55];
 			[highlight setOnTintColor:[UIColor colorWithRed:1 green:50/255.f blue:1 alpha:1]];
 			//[waggle setOnTintColor:[UIColor colorWithRed:1 green:50/255.f blue:1 alpha:1]];
-			highlight.on = _listing.highlight ? YES : NO;
-			waggle.on = _listing.waggle ? YES : NO;
+			highlight.on = _listing.highlight;
+			waggle.on = _listing.waggle;
 			break;
 		default:
 			break;
@@ -547,8 +543,8 @@
 	switch (indexPath.section) {
 		case 0:
 			if ([cell.contentView viewWithTag:20]) [[cell.contentView viewWithTag:20] removeFromSuperview];
-			if ([_listing.picturesCache objectForKey:[_listing.pictureNames objectAtIndex:indexPath.row]]) {
-				UIImage *image = (UIImage *)[_listing.picturesCache objectForKey:[_listing.pictureNames objectAtIndex:indexPath.row]];
+			if ([_listing.picturesCache objectForKey:(_listing.pictureNames)[(NSUInteger) indexPath.row]]) {
+				UIImage *image = (UIImage *) [_listing.picturesCache objectForKey:(_listing.pictureNames)[(NSUInteger) indexPath.row]];
 				UIImageView *pictureView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 130, 100)];
 				NSAssert(image != nil, @"could not find cached image");
 				[pictureView setImage:image];
@@ -601,17 +597,17 @@
 		if (index <= _listing.pictureNames.count-1 ) {
 			if (_listingUpdate) {
 				YGWebService *ws = [YGWebService initWithDelegate:self];
-				[ws deletePicture:[NSString stringWithFormat:@"deletepicture/%@/%@", _listing.id, [_listing.pictureNames objectAtIndex:index]] :(int)index :@"GET"];
+				[ws deletePicture:[NSString stringWithFormat:@"deletepicture/%@/%@", _listing.id, (_listing.pictureNames)[(NSUInteger) index]] :index :@"GET"];
 			} else {
-				[_listing.pictureNames removeObjectAtIndex:index];
-				[_listing.pictures removeObjectAtIndex:index];
+                [_listing.pictureNames removeObjectAtIndex:(NSUInteger) index];
+                [_listing.pictures removeObjectAtIndex:(NSUInteger) index];
 				[_carousel reloadSections:[NSIndexSet indexSetWithIndex:0]];
 			}
 		} else {
-			[_listingUpdate.pictures removeObjectAtIndex:index-_listing.pictureNames.count];
-			[_listingUpdate.pictureNames removeObjectAtIndex:index-_listing.pictureNames.count];
-			[_listing.pictures removeObjectAtIndex:index];
-			[_listing.pictureNames removeObjectAtIndex:index];
+            [_listingUpdate.pictures removeObjectAtIndex:(NSUInteger) (index - _listing.pictureNames.count)];
+            [_listingUpdate.pictureNames removeObjectAtIndex:(NSUInteger) (index - _listing.pictureNames.count)];
+            [_listing.pictures removeObjectAtIndex:(NSUInteger) index];
+            [_listing.pictureNames removeObjectAtIndex:(NSUInteger) index];
 			[_carousel reloadSections:[NSIndexSet indexSetWithIndex:0]];
 		}
 	} else {
@@ -648,8 +644,8 @@
 		CLLocation *currentLocation = [locations lastObject];
 		if (self->postWithCurrentLocation) {
 			ZOLocation *currLoc = [[ZOLocation alloc] init];
-			currLoc.latitude = [NSNumber numberWithDouble:currentLocation.coordinate.latitude];
-			currLoc.longitude = [NSNumber numberWithDouble:currentLocation.coordinate.longitude];
+			currLoc.latitude = @(currentLocation.coordinate.latitude);
+			currLoc.longitude = @(currentLocation.coordinate.longitude);
 			GMSGeocoder *geocoder = [[GMSGeocoder alloc] init];
 			[geocoder reverseGeocodeCoordinate:currentLocation.coordinate completionHandler:^(GMSReverseGeocodeResponse *callBack, NSError *error) {
 				currLoc.street = callBack.firstResult.thoroughfare;
@@ -669,13 +665,13 @@
 
 -(void)coughDeletePictureData:(NSData *)data :(int)index {
 	NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-	if ([[response objectForKey:@"status"] isEqualToString:@"OK"]) {
-		if ([_listingUpdate.pictureNames indexOfObject:_listing.pictureNames[index]] != NSNotFound) {
-			[_listingUpdate.pictureNames removeObjectAtIndex:index];
-			[_listingUpdate.pictures removeObjectAtIndex:index];
+	if ([response[@"status"] isEqualToString:@"OK"]) {
+		if ([_listingUpdate.pictureNames indexOfObject:_listing.pictureNames[(NSUInteger) index]] != NSNotFound) {
+            [_listingUpdate.pictureNames removeObjectAtIndex:(NSUInteger) index];
+            [_listingUpdate.pictures removeObjectAtIndex:(NSUInteger) index];
 		}
-		[_listing.pictureNames removeObjectAtIndex:index];
-		[_listing.pictures removeObjectAtIndex:index];
+        [_listing.pictureNames removeObjectAtIndex:(NSUInteger) index];
+        [_listing.pictures removeObjectAtIndex:(NSUInteger) index];
 		[_carousel reloadSections:[NSIndexSet indexSetWithIndex:0]];
 	}
 }
@@ -694,22 +690,22 @@
 	}
 }
 
--(void)renderListingPicture:(ListingRecord *)listing atIndex:(int)index {
+-(void)renderListingPicture:(ListingRecord *)listing atIndex:(NSUInteger)index {
 	NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
 	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
 	dispatch_async(queue, ^{
-		NSString *fullPathToImage = [listing.pictures objectAtIndex:index];
+		NSString *fullPathToImage = (listing.pictures)[(NSUInteger) index];
 		UIImage *image = [UIImage imageWithContentsOfFile:fullPathToImage];
 		NSAssert(image != nil, @"the image found is could not be loaded from disk");
 		CGRect rect;
 		if (image.size.width < image.size.height) {
-			rect = CGRectMake(0, (image.size.height - image.size.width)/2, image.size.width, image.size.width/1.3);
+			rect = CGRectMake(0, (image.size.height - image.size.width)/2, image.size.width, (CGFloat) (image.size.width/1.3));
 			CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
 			image = (UIImage *)[UIImage imageWithCGImage:imageRef];
 			CFRelease(imageRef);
 		}
-		[listing.picturesCache setObject:image forKey:[listing.pictureNames objectAtIndex:index]];
-		NSAssert([listing.picturesCache objectForKey:[listing.pictureNames objectAtIndex:index]] != nil, @"the image is not saved to the cache");
+        [listing.picturesCache setObject:image forKey:(listing.pictureNames)[(NSUInteger) index]];
+		NSAssert([listing.picturesCache objectForKey:(listing.pictureNames)[index]] != nil, @"the image is not saved to the cache");
 		dispatch_async(dispatch_get_main_queue(), ^{
 			UICollectionViewCell *cell = [_carousel cellForItemAtIndexPath:indexPath];
 			[(UIImageView *)[cell.contentView viewWithTag:20] setImage:image];
@@ -764,7 +760,7 @@
 			NSString *localizedMoneyString;
 			NSNumber *decimalNumber = [decimalFormatter numberFromString:textField.text];
 			if ([decimalNumber floatValue] > 99.99) {
-				decimalNumber = [NSNumber numberWithInt:ceilf([decimalNumber floatValue])];
+				decimalNumber = @((int) ceilf([decimalNumber floatValue]));
 				[currencyFormatter setMaximumFractionDigits:0];
 				localizedMoneyString = [currencyFormatter stringFromNumber:decimalNumber];
 				[currencyFormatter setMinimumFractionDigits:2];
@@ -782,7 +778,7 @@
 			textField.text = localizedMoneyString;
 		}
 	} else {
-		_listing.price = 0;
+		_listing.price = @0;
 		_listing.locale = @"";
 		_listing.currency_code = @"";
 		if (_listingUpdate) {

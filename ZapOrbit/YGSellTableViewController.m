@@ -90,22 +90,22 @@
 	
 	if (response.count) {
 		for (NSDictionary *dict in response) {
-			NSString *rawUpdateDate = [dict objectForKey:@"updated_on"];
+			NSString *rawUpdateDate = dict[@"updated_on"];
 			NSString *dateStr = [rawUpdateDate substringToIndex:rawUpdateDate.length-2];
 			NSDate *date = [df dateFromString:dateStr];
 			ListingRecord *listing = [[ListingRecord alloc] init];
-			listing.title = [dict objectForKey:@"title"];
-			listing.description = [dict objectForKey:@"description"];
+			listing.title = dict[@"title"];
+			listing.description = dict[@"description"];
 			listing.pictures = [[NSMutableArray alloc] initWithCapacity:5];
 			listing.picturesCache = [[NSCache alloc] init];
-			listing.pictureNames = [dict objectForKey:@"pictures"];
-			listing.locale = [dict objectForKey:@"locale"];
-			listing.price = [NSNumber numberWithFloat:[[dict objectForKey:@"price"] floatValue]];
-			listing.highlight = [[dict objectForKey:@"highlight"] boolValue];
-			listing.waggle = [[dict objectForKey:@"waggle"] boolValue];
-			listing.shop = [dict objectForKey:@"shop"];
-			listing.userid = [[dict objectForKey:@"userid"] intValue];
-			listing.id = [NSNumber numberWithInt:[[dict objectForKey:@"id"] intValue]];
+			listing.pictureNames = dict[@"pictures"];
+			listing.locale = dict[@"locale"];
+			listing.price = @([dict[@"price"] floatValue]);
+			listing.highlight = [dict[@"highlight"] boolValue];
+			listing.waggle = [dict[@"waggle"] boolValue];
+			listing.shop = dict[@"shop"];
+			listing.userid = [dict[@"userid"] intValue];
+			listing.id = @([dict[@"id"] intValue]);
 			listing.updated_on =[date formattedDateRelativeToNow:date];
 			[self.itemsForSale addObject:listing];
 		}
@@ -208,7 +208,7 @@
 	if (indexPath.row == self.itemsForSale.count-1) cell.separatorInset = UIEdgeInsetsZero;
     
     // setting the title
-	ListingRecord *listing = self.itemsForSale[indexPath.row];
+	ListingRecord *listing = self.itemsForSale[(NSUInteger) indexPath.row];
 	VALabel *titleLabel = (VALabel *)[cell.contentView viewWithTag:20];
 	[titleLabel setText:listing.title];
 	titleLabel.textColor = [UIColor blackColor];
@@ -227,7 +227,7 @@
 	} else
 		price = [priceFormatter stringFromNumber:listing.price];
 	[priceFormatter setLocale:[NSLocale currentLocale]];
-	CGSize size = [price sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:13],NSFontAttributeName, nil]];
+	CGSize size = [price sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:13]}];
 	CGRect frame = CGRectMake(301-size.width, 15, size.width+11, size.height+4);
 	YGPriceView *priceView = (YGPriceView *)[cell.contentView viewWithTag:40];
 	if (priceView) [priceView removeFromSuperview];
@@ -302,7 +302,7 @@
 	if (listing.pictures.count) {
 		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
 		dispatch_async(queue, ^{
-			NSString *fullPathToImage = [NSString stringWithFormat:@"%@",[listing.pictures objectAtIndex:0]];
+			NSString *fullPathToImage = [NSString stringWithFormat:@"%@", (listing.pictures)[0]];
 			UIImage *image = [UIImage imageWithContentsOfFile:fullPathToImage];
 			CGRect rect;
 			CGImageRef imageRef;
@@ -382,8 +382,8 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-		ListingRecord *deletedListing = self.itemsForSale[indexPath.row];
-		[self.itemsForSale removeObjectAtIndex:indexPath.row];
+		ListingRecord *deletedListing = self.itemsForSale[(NSUInteger) indexPath.row];
+        [self.itemsForSale removeObjectAtIndex:(NSUInteger) indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 		[self deleteListingOnServer:deletedListing];
     }
@@ -396,7 +396,7 @@
 
 -(void)deleteListingResponse:(NSData *)data :(id)listing{
 	NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-	if (response && [[response objectForKey:@"status"] isEqualToString:@"OK"]) {
+	if (response && [response[@"status"] isEqualToString:@"OK"]) {
 		NSLog(@"listing with title '%@' was deleted", ((ListingRecord *)listing).title);
 	}
 }
@@ -413,7 +413,7 @@
 	
 	NSIndexPath *indexpath = [self.tableView indexPathForRowAtPoint:[button.superview convertPoint:aPoint toView:self.tableView]];
 	
-	ListingRecord *listing = self.itemsForSale[indexpath.row];
+	ListingRecord *listing = self.itemsForSale[(NSUInteger) indexpath.row];
 	
 	if ([[FBSession activeSession] isOpen]) {
 		NSArray *permissions = [[FBSession activeSession] permissions];
@@ -436,7 +436,7 @@
 	NSMutableDictionary<FBGraphObject> *item =
     [FBGraphObject openGraphObjectForPostWithType:@"zaporbit:bargain"
                                             title:listing.title
-                                            image:[NSString stringWithFormat:@"https://zaporbit.com/pictures/%@.jpg", [listing.pictureNames objectAtIndex:0]]
+                                            image:[NSString stringWithFormat:@"https://zaporbit.com/pictures/%@.jpg", (listing.pictureNames)[0]]
 											  url:nil
                                       description:listing.description];
 	
@@ -456,10 +456,10 @@
 													 if(error) {
 														 NSLog(@"Error: %@", error.description);
 													 } else {
-														 bool didComplete = [[results objectForKey:@"didComplete"] boolValue];
-														 NSString *completedStatus = [results objectForKey:@"completionGesture"];
+														 bool didComplete = [results[@"didComplete"] boolValue];
+														 NSString *completedStatus = results[@"completionGesture"];
 														 if (didComplete && [completedStatus isEqualToString:@"post"]) {
-															 NSLog(@"item posted with postId: %@", [results objectForKey:@"postId"]);
+															 NSLog(@"item posted with postId: %@", results[@"postId"]);
 														 } else {
 															 NSLog(@"could not post the item: %@", results);
 														 }
@@ -475,7 +475,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"itemSegue"] && sender != self) {
 		NSIndexPath *indexPath = (NSIndexPath *)sender;
-        id listing = self.itemsForSale[indexPath.row];
+        id listing = self.itemsForSale[(NSUInteger) indexPath.row];
         [[segue destinationViewController] setListing:listing];
     }
 }

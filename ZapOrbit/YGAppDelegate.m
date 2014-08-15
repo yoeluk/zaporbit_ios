@@ -102,9 +102,9 @@ static NSString * const kGoogleClientId = @"252408930349-1otbutcank3df2grgcav7dj
 	BOOL wasHandledByFB = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
 	
 	// You can add your app-specific url handling code here if needed
-	BOOL wasHandledByZO = [[url scheme] isEqualToString:@"zaporbit"] ? YES : NO;
+	BOOL wasHandledByZO = [[url scheme] isEqualToString:@"zaporbit"];
 	BOOL wasHandledByG = [GPPURLHandler handleURL:url sourceApplication:sourceApplication annotation:annotation];
-	return wasHandledByFB || wasHandledByG || wasHandledByZO ? YES : NO;
+	return wasHandledByFB || wasHandledByG || wasHandledByZO;
 }
 
 -(void)saveSettings:(id)sender {

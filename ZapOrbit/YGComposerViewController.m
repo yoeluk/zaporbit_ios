@@ -49,17 +49,17 @@
 	self->progressView.progress = 0.0f;
 	[self.tableView addSubview:self->progressView];
 	
-	self.toUser = [self.details objectForKey:@"toUser"];
-	self.me = [self.details objectForKey:@"me"];
+	self.toUser = (self.details)[@"toUser"];
+	self.me = (self.details)[@"me"];
 	if (![self.replying boolValue]) {
 		UIBarButtonItem *rightBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Send" style:UIBarButtonItemStyleDone target:self action:@selector(sendStartConversation:)];
 		[self.navigationItem setRightBarButtonItem:rightBarButton];
-		self->listing = [self.details objectForKey:@"listing"];
+		self->listing = (self.details)[@"listing"];
 	} else {
 		self.navigationItem.rightBarButtonItem.action = @selector(replyToConvo:);
 		self.navigationItem.rightBarButtonItem.target = self;
-		self->convid = [self.details objectForKey:@"convid"];
-		self->convoTitle = [self.details objectForKey:@"title"];
+		self->convid = (self.details)[@"convid"];
+		self->convoTitle = (self.details)[@"title"];
 	}
 	self.navigationItem.rightBarButtonItem.enabled = NO;
 }
@@ -76,7 +76,7 @@
 }
 
 -(void)keyboardWillShow:(NSNotification *)aNotification {
-	CGRect aRect = [[[aNotification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	CGRect aRect = [[aNotification userInfo][UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	self.tableView.contentInset = UIEdgeInsetsMake(64, 0, aRect.size.height-44, 0);
 	self.tableView.scrollIndicatorInsets = UIEdgeInsetsMake(64, 0, aRect.size.height-44, 0);
 }
@@ -104,7 +104,7 @@
 		[self->progressView setHidden:NO];
 		[self->progressView setProgress:0.4 animated:YES];
 		
-		NSDictionary *messageDict = [[NSDictionary alloc] initWithObjectsAndKeys:@"unread", @"received_status", [NSNumber numberWithLong:self.me.id], @"senderid", [NSNumber numberWithLong:self.toUser.id], @"recipientid", self->convid, @"convid", self->message, @"message", nil];
+		NSDictionary *messageDict = @{@"received_status" : @"unread", @"senderid" : @(self.me.id), @"recipientid" : @(self.toUser.id), @"convid" : self->convid, @"message" : self->message};
 		YGWebService *ws = [YGWebService initWithDelegate:self];
 		[ws startConversation:messageDict
 				  withService:@"replytoconvo"
@@ -117,9 +117,9 @@
 	if (self->message) {
 		[self->progressView setHidden:NO];
 		[self->progressView setProgress:0.4 animated:YES];
-		NSDictionary *convo = [[NSDictionary alloc] initWithObjectsAndKeys:@"online", @"user1_status", @"online", @"user2_status", [NSNumber numberWithLong:self.me.id], @"user1id", [NSNumber numberWithLong:self.toUser.id], @"user2id", self->listing.id, @"offerid", self->listing.title, @"title", nil];
+		NSDictionary *convo = @{@"user1_status" : @"online", @"user2_status" : @"online", @"user1id" : @(self.me.id), @"user2id" : @(self.toUser.id), @"offerid" : self->listing.id, @"title" : self->listing.title};
 		YGWebService *ws = [YGWebService initWithDelegate:self];
-		[ws startConversation:[[NSDictionary alloc] initWithObjectsAndKeys:convo, @"conversation", self->message, @"message", nil]
+		[ws startConversation:@{@"conversation" : convo, @"message" : self->message}
 				  withService:@"startconversation"
 					andMethod:@"POST"];
 		[self.view endEditing:YES];
@@ -193,13 +193,13 @@
 				cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier forIndexPath:indexPath];
 				
 				attrs = [[NSMutableDictionary alloc] initWithCapacity:3];
-				[attrs setObject:[UIFont systemFontOfSize:15] forKey:NSFontAttributeName];
+				attrs[NSFontAttributeName] = [UIFont systemFontOfSize:15];
 				cell.textLabel.font = [UIFont systemFontOfSize:15];
 				cell.textLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1];
 				
-				[attrs setObject:[UIColor colorWithRed:0 green:112/255.f blue:1 alpha:1] forKey:NSForegroundColorAttributeName];
+				attrs[NSForegroundColorAttributeName] = [UIColor colorWithRed:0 green:112 / 255.f blue:1 alpha:1];
 				
-				NSDictionary *senderAttrs = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:NSUnderlineStyleSingle], NSUnderlineStyleAttributeName, nil];
+				NSDictionary *senderAttrs = @{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)};
 				NSMutableAttributedString *senderAttrString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@", self.toUser.name, self.toUser.surname]];
 				[senderAttrString setAttributes:senderAttrs range:NSMakeRange(0, senderAttrString.length)];
 				toAttrString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"to: "]];
@@ -212,11 +212,11 @@
 				cell = [tableView dequeueReusableCellWithIdentifier:reCellIndentifier forIndexPath:indexPath];
 				
 				attrs = [[NSMutableDictionary alloc] initWithCapacity:3];
-				[attrs setObject:[UIFont systemFontOfSize:15] forKey:NSFontAttributeName];
+				attrs[NSFontAttributeName] = [UIFont systemFontOfSize:15];
 				UILabel *reLabel = (UILabel *)[cell.contentView viewWithTag:44];
 				reLabel.font = [UIFont systemFontOfSize:15];
 				reLabel.textColor = [UIColor colorWithWhite:0.3 alpha:1];
-				[attrs setObject:[UIColor grayColor] forKey:NSForegroundColorAttributeName];
+				attrs[NSForegroundColorAttributeName] = [UIColor grayColor];
 				toAttrString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"re: %@", [self.replying boolValue] ? self->convoTitle : self->listing.title]];
 				[toAttrString setAttributes:attrs range:NSMakeRange(0, 3)];
 				reLabel.attributedText = toAttrString;
@@ -273,9 +273,7 @@
 
 -(void)textViewDidChange:(UITextView *)textView {
 	self->message = [textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-	if (![self->message isEqualToString:@""]) {
-		self.navigationItem.rightBarButtonItem.enabled = YES;
-	} else self.navigationItem.rightBarButtonItem.enabled = NO;
+    self.navigationItem.rightBarButtonItem.enabled = ![self->message isEqualToString:@""];
 }
 
 /*

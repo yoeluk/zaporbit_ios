@@ -31,7 +31,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
     [super viewDidLoad];
 	self->userInfo = [YGUserInfo sharedInstance];
 	YGWebService *ws = [YGWebService initWithDelegate:self];
-	[ws getBillingDataForUser:userInfo.user.id];
+    [ws getBillingDataForUser:(NSUInteger) userInfo.user.id];
 	self->paidBills = [[NSMutableArray alloc] initWithCapacity:3];
 	self->unpaidBills = [[NSMutableArray alloc] initWithCapacity:3];
 	
@@ -71,7 +71,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	if (![data isEqual:[NSNull null]] && data.length) {
 		NSMutableDictionary *dataObj = (NSMutableDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
 		
-		self->unpaidBills = [[dataObj objectForKey:@"billing"] objectForKey:@"unpaid"];
+		self->unpaidBills = [dataObj[@"billing"] objectForKey:@"unpaid"];
 		[self findCellHeights];
 		[self.tableView reloadData];
 	}
@@ -96,23 +96,23 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	NSDictionary *attrs = @{NSFontAttributeName : [UIFont systemFontOfSize:14],
 							NSParagraphStyleAttributeName : paragraphStyle};
 	for (NSDictionary *billing in self->unpaidBills) {
-		NSDictionary *bill = [billing objectForKey:@"bill"];
-		NSString *rawUpdateDate = [bill objectForKey:@"created_on"];
+		NSDictionary *bill = billing[@"bill"];
+		NSString *rawUpdateDate = bill[@"created_on"];
 		NSString *dateStr = [rawUpdateDate substringToIndex:rawUpdateDate.length-2];
 		NSDate *date = [self->dateFormatter dateFromString:dateStr];
-		NSMutableAttributedString *titleString = [[NSMutableAttributedString alloc] initWithString:[bill objectForKey:@"offer_title"] attributes:attrs];
-		NSMutableAttributedString *detailsString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@\n%@", [bill objectForKey:@"offer_price"], [self->dateFormatter stringFromDate:date]] attributes:attrs];
+		NSMutableAttributedString *titleString = [[NSMutableAttributedString alloc] initWithString:bill[@"offer_title"] attributes:attrs];
+		NSMutableAttributedString *detailsString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@\n%@", bill[@"offer_price"], [self->dateFormatter stringFromDate:date]] attributes:attrs];
 		[titleString appendAttributedString:detailsString];
 		titleTextView.attributedText = titleString;
 		[titleTextView sizeToFit];
-		[self->heights addObject:[NSNumber numberWithFloat:titleTextView.frame.size.height]];
+        [self->heights addObject:@(titleTextView.frame.size.height)];
 		titleTextView.frame = frame;
 	}
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	return indexPath.row == 0? 44 : self->heights.count? self->heights.count < indexPath.row ? 44 : [[self->heights objectAtIndex:indexPath.row-1] floatValue] : 0;
+	return indexPath.row == 0? 44 : self->heights.count? self->heights.count < indexPath.row ? 44 : [(self->heights)[indexPath.row - 1] floatValue] : 0;
 }
 
 #pragma mark - Table view data source
@@ -149,7 +149,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	} else if (indexPath.row > self->unpaidBills.count) {
 		cell.selectionStyle = UITableViewCellSelectionStyleDefault;
 		UILabel *feesLabel = (UILabel *)[cell.contentView viewWithTag:10];
-		NSNumber *feesN = [NSNumber numberWithFloat:([self calculateBillingTotal]*0.06)];
+		NSNumber *feesN = @((float) ([self calculateBillingTotal] * 0.06));
 		NSString *fees = [self->currencyFormatter stringFromNumber:feesN];
 		feesLabel.text = fees;
 		[[cell.contentView viewWithTag:5] removeFromSuperview];
@@ -168,8 +168,8 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 		[cell.contentView addSubview:divider];
 		
 	} else {
-		NSDictionary *bill = [[self->unpaidBills objectAtIndex:indexPath.row-1] objectForKey:@"bill"];
-		NSString *rawUpdateDate = [bill objectForKey:@"created_on"];
+		NSDictionary *bill = [(self->unpaidBills)[(NSUInteger) (indexPath.row - 1)] objectForKey:@"bill"];
+		NSString *rawUpdateDate = bill[@"created_on"];
 		NSString *dateStr = [rawUpdateDate substringToIndex:rawUpdateDate.length-2];
 		NSDate *date = [self->dateFormatter dateFromString:dateStr];
 		[self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
@@ -186,10 +186,10 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 		titleTextView.userInteractionEnabled = NO;
 		titleTextView.tag = 5;
 		titleTextView.textContainer.lineFragmentPadding = 0;
-		NSLocale *locale = [NSLocale localeWithLocaleIdentifier:[bill objectForKey:@"locale"]];
+		NSLocale *locale = [NSLocale localeWithLocaleIdentifier:bill[@"locale"]];
 		[self->currencyFormatter setLocale:locale];
-		NSMutableAttributedString *titleString = [[NSMutableAttributedString alloc] initWithString:[bill objectForKey:@"offer_title"] attributes:attrs];
-		NSMutableAttributedString *detailsString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nSale Price: %@\n%@", [self->currencyFormatter stringFromNumber:[bill objectForKey:@"offer_price"]], [self->dateFormatter stringFromDate:date]] attributes:attrs];
+		NSMutableAttributedString *titleString = [[NSMutableAttributedString alloc] initWithString:bill[@"offer_title"] attributes:attrs];
+		NSMutableAttributedString *detailsString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\nSale Price: %@\n%@", [self->currencyFormatter stringFromNumber:bill[@"offer_price"]], [self->dateFormatter stringFromDate:date]] attributes:attrs];
 		[detailsString addAttribute:NSForegroundColorAttributeName value:[UIColor lightGrayColor] range:NSMakeRange(0, [detailsString length])];
 		[titleString appendAttributedString:detailsString];
 		titleTextView.attributedText = titleString;
@@ -198,8 +198,8 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 		[cell.contentView addSubview:titleTextView];
 		[self->currencyFormatter setLocale:[NSLocale localeWithLocaleIdentifier:@"en_US"]];
 		UILabel *feesLabel = (UILabel *)[cell.contentView viewWithTag:10];
-		float price = [[bill objectForKey:@"offer_price"] floatValue]*[[[self->unpaidBills objectAtIndex:indexPath.row-1] objectForKey:@"USD_Exchange"] floatValue];
-		NSNumber *feesN = [NSNumber numberWithFloat:(price*0.06)];
+		float price = [bill[@"offer_price"] floatValue]*[[(self->unpaidBills)[(NSUInteger) (indexPath.row - 1)] objectForKey:@"USD_Exchange"] floatValue];
+		NSNumber *feesN = @((float) (price * 0.06));
 		NSString *fees = [self->currencyFormatter stringFromNumber:feesN];
 		feesLabel.text = fees;
     }
@@ -210,8 +210,8 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 - (float)calculateBillingTotal {
 	float total = 0;
 	for (NSDictionary *bill in self->unpaidBills) {
-		float price = [[[bill objectForKey:@"bill"] objectForKey:@"offer_price"] floatValue];
-		float exchange = [[bill objectForKey:@"USD_Exchange"] floatValue];
+		float price = [[bill[@"bill"] objectForKey:@"offer_price"] floatValue];
+		float exchange = [bill[@"USD_Exchange"] floatValue];
 		total += price*exchange;
 	}
 	return total;

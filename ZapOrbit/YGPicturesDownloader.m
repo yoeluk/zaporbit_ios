@@ -18,7 +18,7 @@
 
 -(NSString*)generateRandomString:(int)num {
 	NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@*_$";
-    NSMutableString *string = [NSMutableString stringWithCapacity:num];
+    NSMutableString *string = [NSMutableString stringWithCapacity:(NSUInteger) num];
     for (int i = 0; i < num; i++) {
         [string appendFormat:@"%C", [letters characterAtIndex:arc4random() % [letters length]]];
     }
@@ -29,8 +29,8 @@
 
 - (void)startDownload:(int)indx {
 	self.activeDownload = [NSMutableData data];
-	self.index = [NSNumber numberWithInt:indx];
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://zaporbit.com/api/downloadpictures/%@", self.listing.pictureNames[indx]]];
+	self.index = @(indx);
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://zaporbit.com/api/downloadpictures/%@", self.listing.pictureNames[(NSUInteger) indx]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
     // alloc+init and start an NSURLConnection; release on completion/failure
@@ -51,7 +51,7 @@
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-	NSLog(@"downloading failed with error:\n %@", [[error userInfo] objectForKey:NSLocalizedFailureReasonErrorKey]);
+	NSLog(@"downloading failed with error:\n %@", [error userInfo][NSLocalizedFailureReasonErrorKey]);
     self.activeDownload = nil;
     self.imageConnection = nil;
 }
@@ -61,7 +61,7 @@
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *directory = [NSString stringWithFormat:@"%@/listingPictures", paths[0]];
-	NSString *fullPath = [NSString stringWithFormat:@"%@/%@", directory, self.listing.pictureNames[[self.index integerValue]]];
+	NSString *fullPath = [NSString stringWithFormat:@"%@/%@", directory, self.listing.pictureNames[(NSUInteger) [self.index integerValue]]];
 	
 	BOOL isDir = YES;
 	NSError *error = nil;

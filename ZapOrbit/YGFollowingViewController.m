@@ -53,7 +53,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
     // Dispose of any resources that can be recreated.
 }
 
-- (void)fetchFriends:(void(^)(NSArray *friends))callback {
+- (void)fetchFriends:(void(^)(NSArray *fds))callback {
     [FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id response, NSError *error) {
         NSMutableArray *friends = [NSMutableArray new];
         if (!error) {
@@ -61,6 +61,11 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
         }
         callback(friends);
     }];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	float height = 44;
+	return height;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -78,12 +83,12 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	static NSString *cellIdentifier = @"Cell";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
 	UILabel *friendLabel = (UILabel *)[cell.contentView viewWithTag:20];
-	friendLabel.text = [[self->ZOFriends objectAtIndex:indexPath.row] objectForKey:@"name"];
+	friendLabel.text = [(self->ZOFriends)[(NSUInteger) indexPath.row] objectForKey:@"name"];
 	friendLabel.font = [UIFont boldSystemFontOfSize:16];
-	
+	 
 	UISwitch *followSwitch = (UISwitch *)[cell.contentView viewWithTag:10];
 	bool following = NO;
-	NSString *friendId = [[self->ZOFriends objectAtIndex:indexPath.row] objectForKey:@"id"];
+	NSString *friendId = [(self->ZOFriends)[(NSUInteger) indexPath.row] objectForKey:@"id"];
 	for (NSString *fFriendId in self->appSettings.followingFriends) {
 		if ([fFriendId isEqualToString:friendId]) {
 			following = YES;
@@ -111,7 +116,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	UISwitch *sendSwitch = (UISwitch *)sender;
 	CGPoint aPoint = [self.tableView convertPoint:sendSwitch.bounds.origin fromView:sendSwitch];
 	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:aPoint];
-	NSString *friendId = [[self->ZOFriends objectAtIndex:indexPath.row] objectForKey:@"id"];
+	NSString *friendId = [(self->ZOFriends)[(NSUInteger) indexPath.row] objectForKey:@"id"];
 	if (sendSwitch.isOn) {
 		[self->appSettings.followingFriends addObject:friendId];
 	} else {
@@ -126,9 +131,9 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 
 - (IBAction)saveFollowingFriends:(id)sender {
 	NSMutableArray *followTheseFriends = [NSMutableArray new];
-	NSNumber *userid = [NSNumber numberWithLongLong:(long long)userInfo.user.id];
+	NSNumber *userid = @((long long) userInfo.user.id);
 	for (NSString *friendId in self->appSettings.followingFriends) {
-		NSDictionary *friend = [[NSDictionary alloc] initWithObjectsAndKeys:userid, @"userid", [NSNumber numberWithLongLong:[friendId longLongValue]], @"friendid", nil];
+		NSDictionary *friend = @{@"userid" : userid, @"friendid" : @([friendId longLongValue])};
 		[followTheseFriends addObject:friend];
 	}
 	

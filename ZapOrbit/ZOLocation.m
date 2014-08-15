@@ -32,27 +32,27 @@
 
 +(ZOLocation *)locationWithDictionary:(NSDictionary *)locationDictionary {
 	ZOLocation *newLocation = [[ZOLocation alloc] init];
-	newLocation.locality = [locationDictionary objectForKey:@"locality"];
-	newLocation.street = [locationDictionary objectForKey:@"street"];
-	newLocation.latitude = [locationDictionary objectForKey:@"latitude"];
-	newLocation.longitude = [locationDictionary objectForKey:@"longitude"];
+	newLocation.locality = locationDictionary[@"locality"];
+	newLocation.street = locationDictionary[@"street"];
+	newLocation.latitude = locationDictionary[@"latitude"];
+	newLocation.longitude = locationDictionary[@"longitude"];
 	newLocation.administrativeArea = [locationDictionary objectForKeyedSubscript:@"administrativeArea"];
 	return newLocation;
 }
 
 +(NSMutableDictionary *)dictionaryWithLocation:(ZOLocation *)location {
 	NSMutableDictionary *locDictionary = [[NSMutableDictionary alloc] init];
-	[locDictionary setObject:location.street forKey:@"street"];
-	[locDictionary setObject:location.locality forKey:@"locality"];
-	[locDictionary setObject:location.latitude forKey:@"latitude"];
-	[locDictionary setObject:location.longitude forKey:@"longitude"];
-	[locDictionary setObject:location.administrativeArea forKey:@"administrativeArea"];
+	locDictionary[@"street"] = location.street;
+	locDictionary[@"locality"] = location.locality;
+	locDictionary[@"latitude"] = location.latitude;
+	locDictionary[@"longitude"] = location.longitude;
+	locDictionary[@"administrativeArea"] = location.administrativeArea;
 	return locDictionary;
 }
 +(ZOLocation *)locationWithCLLocation:(CLLocation *)location {
 	ZOLocation *newLocation = [[ZOLocation alloc] init];
-	newLocation.latitude = [NSNumber numberWithDouble:location.coordinate.latitude];
-	newLocation.longitude = [NSNumber numberWithDouble:location.coordinate.longitude];
+	newLocation.latitude = @(location.coordinate.latitude);
+	newLocation.longitude = @(location.coordinate.longitude);
 	return newLocation;
 }
 

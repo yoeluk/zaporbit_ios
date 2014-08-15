@@ -64,8 +64,8 @@ static int locationObservanceContext;
                        context:(void *)context {
 	if (!firstLocationUpdate_ && context == &locationObservanceContext) {
 		firstLocationUpdate_ = YES;
-		if ([change objectForKey:NSKeyValueChangeNewKey]) {
-			CLLocation *location = [change objectForKey:NSKeyValueChangeNewKey];
+		if (change[NSKeyValueChangeNewKey]) {
+			CLLocation *location = change[NSKeyValueChangeNewKey];
 			mapView_.camera = [GMSCameraPosition cameraWithTarget:location.coordinate
 															 zoom:12];
 			[self.tableView reloadData];
@@ -171,8 +171,8 @@ static int locationObservanceContext;
 				cell.textLabel.lineBreakMode = NSLineBreakByTruncatingMiddle;
 				cell.textLabel.numberOfLines = 0;
 				cell.textLabel.text = self.appSettings.defaultLocation ? [NSString stringWithFormat:@"%@, %@ %@.", self.appSettings.defaultLocation.street, self.appSettings.defaultLocation.locality, self.appSettings.defaultLocation.administrativeArea] : @"No saved location";
-				UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:25];
-				imageView.image = [UIImage imageNamed:@"ios7_place"];
+				UIImageView *uiImageView = (UIImageView *)[cell.contentView viewWithTag:25];
+				uiImageView.image = [UIImage imageNamed:@"ios7_place"];
 			}
 			break;
 		case 1:
@@ -225,8 +225,8 @@ static int locationObservanceContext;
 		self.appSettings.defaultLocation.street = callBack.firstResult.thoroughfare;
 		self.appSettings.defaultLocation.locality = callBack.firstResult.locality;
 		self.appSettings.defaultLocation.administrativeArea = callBack.firstResult.administrativeArea;
-		self.appSettings.defaultLocation.latitude = [NSNumber numberWithFloat:callBack.firstResult.coordinate.latitude];
-		self.appSettings.defaultLocation.longitude = [NSNumber numberWithFloat:callBack.firstResult.coordinate.longitude];
+		self.appSettings.defaultLocation.latitude = @((float) callBack.firstResult.coordinate.latitude);
+		self.appSettings.defaultLocation.longitude = @((float) callBack.firstResult.coordinate.longitude);
 		[self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
 		GMSMarker *marker = [GMSMarker markerWithPosition:mapView_.myLocation.coordinate];
 		marker.title = @"Default location";

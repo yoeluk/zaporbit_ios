@@ -30,7 +30,7 @@
 
 - (id)copyWithZone:(NSZone *)zone {
 	YGScrollViewCopiable *scrollView = [[YGScrollViewCopiable allocWithZone:zone] initWithFrame:self.frame];
-	[scrollView addSubview:[self.subviews objectAtIndex:0]];
+    [scrollView addSubview:(self.subviews)[0]];
 	scrollView.tag = 10;
 	scrollView.showsHorizontalScrollIndicator = NO;
 	scrollView.pagingEnabled = YES;

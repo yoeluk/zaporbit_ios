@@ -37,12 +37,12 @@ static NSString *kWSDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 }
 
 -(void)requestDirectionsForListing:(NSDictionary *)query {
-	NSArray *waypoints = [query objectForKey:@"waypoints"];
-	NSString *origin = [waypoints objectAtIndex:0];
+	NSArray *waypoints = query[@"waypoints"];
+	NSString *origin = waypoints[0];
 	NSInteger waypointCount = [waypoints count];
 	NSInteger destinationPos = waypointCount -1;
-	NSString *destination = [waypoints objectAtIndex:destinationPos];
-	NSString *sensor = [query objectForKey:@"sensor"];
+	NSString *destination = waypoints[(NSUInteger) destinationPos];
+	NSString *sensor = query[@"sensor"];
 	NSMutableString *url = [NSMutableString stringWithFormat:@"%@&origin=%@&destination=%@&sensor=%@",
 	 kWSDirectionsURL,origin,destination, sensor];
 	if(waypointCount>2) {
@@ -50,7 +50,7 @@ static NSString *kWSDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 		NSInteger wpCount = waypointCount-2;
 		for(int i=1;i<wpCount;i++){
 			[url appendString: @"|"];
-			[url appendString:[waypoints objectAtIndex:i]];
+            [url appendString:waypoints[(NSUInteger) i]];
 		}
 	}
     _directionsURL = [NSURL URLWithString:[url stringByAddingPercentEscapesUsingEncoding: NSASCIIStringEncoding]];
@@ -73,7 +73,7 @@ static NSString *kWSDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 		NSError* error;
 		NSDictionary *json = [NSJSONSerialization
 							  JSONObjectWithData:data
-							  options:kNilOptions
+							  options:(NSJSONReadingOptions) kNilOptions
 							  error:&error];
 		[delegate coughDirectionData:json];
 	}

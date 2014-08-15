@@ -13,7 +13,7 @@
 @property (unsafe_unretained, nonatomic, readonly) NSString* realText;
 
 - (void) beginEditing:(NSNotification*) notification;
-- (void) endEditing:(NSNotification*) notification;
+- (void) endEditingNote:(NSNotification*) notification;
 
 @end
 
@@ -45,7 +45,7 @@
 
 - (void)awakeFromNib {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beginEditing:) name:UITextViewTextDidBeginEditingNotification object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endEditing:) name:UITextViewTextDidEndEditingNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endEditingNote:) name:UITextViewTextDidEndEditingNotification object:self];
     self.realTextColor = self.textColor;
     self.placeholderColor = [UIColor lightGrayColor];
 }
@@ -60,7 +60,7 @@
     if (aPlaceholder != placeholder) {
         placeholder = aPlaceholder;
     }
-    [self endEditing:nil];
+    [self endEditingNote:nil];
 }
 
 - (void)setPlaceholderColor:(UIColor *)aPlaceholderColor {
@@ -103,7 +103,7 @@
     }
 }
 
-- (void)endEditing:(NSNotification *)notification {
+- (void)endEditingNote:(NSNotification *)notification {
     if ([self.realText isEqualToString:@""] || self.realText == nil) {
         super.text = self.placeholder;
         self.textColor = self.placeholderColor;

@@ -80,7 +80,7 @@
 	for (UIButton *star in self.subviews) {
 		if (star.tag <= sender.tag) {
 			[star setSelected:YES];
-			if ([self.rating integerValue] < star.tag) self.rating = [NSNumber numberWithInt:(int)star.tag];
+			if ([self.rating integerValue] < star.tag) self.rating = @((int) star.tag);
 		} else {
 			[star setSelected:NO];
 		}

@@ -178,7 +178,7 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	zapUser.email = user[@"email"];
 	zapUser.name = user.first_name;
 	zapUser.surname = user.last_name;
-	zapUser.fbuserid = [NSNumber numberWithLongLong:[user.id longLongValue]];
+	zapUser.fbuserid = @(user.id.longLongValue);
 	
 	if (FBSession.activeSession.isOpen && (!zapUser.email || !zapUser.name || !zapUser.surname || !zapUser.fbuserid || [zapUser.email isEqualToString:@""])) {
         [FBSession.activeSession closeAndClearTokenInformation];
@@ -221,11 +221,10 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 -(void)verifyFbLogin:(id)sender {
 	if (!userInfo.isLoggedIn && !userInfo.isProcessingLogin) {
 		[userInfo setIsProcessingLogin:YES];
-		NSMutableDictionary *userDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-										userInfo.user.name, @"name",
-										userInfo.user.surname, @"surname",
-										userInfo.user.fbuserid, @"fbuserid",
-										userInfo.user.email, @"email", nil];
+		NSMutableDictionary *userDictionary = [@{@"name" : userInfo.user.name,
+                @"surname" : userInfo.user.surname,
+                @"fbuserid" : userInfo.user.fbuserid,
+                @"email" : userInfo.user.email} mutableCopy];
 		YGWebService *ws = [YGWebService initWithDelegate:self];
 		[ws verifyUser:userDictionary :@"verifyinguser" :@"POST"];
 	}
@@ -235,11 +234,11 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	[userInfo setIsLoggedIn:YES];
 	[userInfo setIsProcessingLogin:NO];
 	NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-	if (response && [[response objectForKey:@"status"] isEqualToString:@"OK"]) {
-		NSDictionary *rating = [response objectForKey:@"rating"];
-		[self->ratingView setRating:[[rating objectForKey:@"rating"] floatValue] animated:YES];
+	if (response && [response[@"status"] isEqualToString:@"OK"]) {
+		NSDictionary *rating = response[@"rating"];
+		[self->ratingView setRating:[rating[@"rating"] floatValue] animated:YES];
 		[self->ratingView setRatingText:@"Basic Level"];
-		userInfo.user.id = [(NSString *)[response objectForKey:@"userid"] integerValue];
+		userInfo.user.id = [(NSString *) response[@"userid"] integerValue];
 		[self getUsersRecords:0];
 	}
 }
@@ -295,21 +294,21 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:buyingURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		if (data) {
 			NSMutableDictionary *dataObj = (NSMutableDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
-			if (dataObj && [[dataObj objectForKey:@"status"] isEqualToString:@"OK"]) {
-				if ([dataObj objectForKey:@"buying_records"]) {
-					id buying_records = [dataObj objectForKey:@"buying_records"];
-					[self.records setObject:[self recordsWithArray:buying_records] forKey:@"buyingRecords"];
+			if (dataObj && [dataObj[@"status"] isEqualToString:@"OK"]) {
+				if (dataObj[@"buying_records"]) {
+					id buying_records = dataObj[@"buying_records"];
+					(self.records)[@"buyingRecords"] = [self recordsWithArray:buying_records];
 				}
-				if ([dataObj objectForKey:@"selling_records"]) {
-					id selling_records = [dataObj objectForKey:@"selling_records"];
-					[self.records setObject:[self recordsWithArray:selling_records] forKey:@"sellingRecords"];
+				if (dataObj[@"selling_records"]) {
+					id selling_records = dataObj[@"selling_records"];
+					(self.records)[@"sellingRecords"] = [self recordsWithArray:selling_records];
 				}
-				if ([dataObj objectForKey:@"billing_records"]) {
-					id billing_records = [dataObj objectForKey:@"billing_records"];
-					[self.records setObject:[self recordsWithArray:billing_records] forKey:@"billingRecords"];
+				if (dataObj[@"billing_records"]) {
+					id billing_records = dataObj[@"billing_records"];
+					(self.records)[@"billingRecords"] = [self recordsWithArray:billing_records];
 				}
-				if ([dataObj objectForKey:@"messages_records"]) {
-					[self.records setObject:[dataObj objectForKey:@"messages_records"] forKey:@"inboxRecords"];
+				if (dataObj[@"messages_records"]) {
+                    (self.records)[@"inboxRecords"] = dataObj[@"messages_records"];
 				}
 				self->appSetting.dataRetrievalDate = [NSDate date];
 			}
@@ -335,27 +334,26 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	NSMutableArray *failedRecords = [[NSMutableArray alloc] init];
 	
 	for (NSMutableDictionary *record in recordsArray) {
-		if ([[record objectForKey:@"status"] isEqualToString:@"pending"])
+		if ([record[@"status"] isEqualToString:@"pending"])
 			[pendingRecords addObject:record];
-		else if ([[record objectForKey:@"status"] isEqualToString:@"accepted"])
+		else if ([record[@"status"] isEqualToString:@"accepted"])
 			[processingRecords addObject:record];
-		else if ([[record objectForKey:@"status"] isEqualToString:@"completed"])
+		else if ([record[@"status"] isEqualToString:@"completed"])
 			[completedRecords addObject:record];
-		else if ([[record objectForKey:@"status"] isEqualToString:@"failed"])
+		else if ([record[@"status"] isEqualToString:@"failed"])
 			[failedRecords addObject:record];
 	}
 	
-	return [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-			pendingRecords, @"pendingRecords",
-			processingRecords, @"processingRecords",
-			completedRecords, @"completedRecords",
-			failedRecords, @"failedRecords", nil];
+	return [@{@"pendingRecords" : pendingRecords,
+            @"processingRecords" : processingRecords,
+            @"completedRecords" : completedRecords,
+            @"failedRecords" : failedRecords} mutableCopy];
 }
 
 -(void)coughRequestedData:(NSData *)data {
 	NSDictionary *response = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-	if (response && [[response objectForKey:@"status"] isEqualToString:@"OK"]) {
-		userInfo.user.id = [(NSString *)[response objectForKey:@"userid"] integerValue];
+	if (response && [response[@"status"] isEqualToString:@"OK"]) {
+		userInfo.user.id = [(NSString *) response[@"userid"] integerValue];
 	}
 }
 
@@ -536,11 +534,11 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 	if ([segue.identifier isEqualToString:@"buyingSegue"]) {
-		[[segue destinationViewController] setRecords:[self.records objectForKey:@"buyingRecords"]];
+        [[segue destinationViewController] setRecords:(self.records)[@"buyingRecords"]];
 	} else if ([segue.identifier isEqualToString:@"sellingSegue"]) {
-		[[segue destinationViewController] setRecords:[self.records objectForKey:@"sellingRecords"]];
+        [[segue destinationViewController] setRecords:(self.records)[@"sellingRecords"]];
 	} else if ([segue.identifier isEqualToString:@"inboxSegue"]) {
-		[[segue destinationViewController] setConversations:[self.records objectForKey:@"inboxRecords"]];
+        [[segue destinationViewController] setConversations:(self.records)[@"inboxRecords"]];
 	}
 }
 

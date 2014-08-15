@@ -157,32 +157,32 @@
 	[priceFormatter setMaximumFractionDigits:0];
 	
 	if (slider.value <= 0.2) {
-		price = [NSNumber numberWithInt:(int)(val-fmodf(val, 5))];
+		price = @((int) (val - fmodf(val, 5)));
 	} else if (slider.value < 0.5) {
-		price = [NSNumber numberWithInt:(int)(val-fmodf(val, 10))];
+		price = @((int) (val - fmodf(val, 10)));
 	} else {
-		price = [NSNumber numberWithInt:(int)(val-fmodf(val, 20))];
+		price = @((int) (val - fmodf(val, 20)));
 	}
 	if (val < 1) {
 		priceLabel.text = @"Any";
 	} else if (val >= 1 && val < 5) {
 		priceLabel.text = [NSString stringWithFormat:@"%@ - %@",
-						   [priceFormatter stringFromNumber:[NSNumber numberWithInt:0]],
-						   [priceFormatter stringFromNumber:[NSNumber numberWithInt:10]]];
+                        [priceFormatter stringFromNumber:@0],
+                        [priceFormatter stringFromNumber:@10]];
 	} else if (val == 500) {
-		priceLabel.text = [NSString stringWithFormat:@"Above %@", [priceFormatter stringFromNumber:[NSNumber numberWithInt:500]]];
+		priceLabel.text = [NSString stringWithFormat:@"Above %@", [priceFormatter stringFromNumber:@500]];
 	} else if (val < 200) {
 		int priceRangeMin = (int)[price integerValue] - 5;
 		int priceRangeMax = (int)[price integerValue] + 5;
 		priceLabel.text = [NSString stringWithFormat:@"%@ - %@",
-						   [priceFormatter stringFromNumber:[NSNumber numberWithInt:priceRangeMin]],
-						   [priceFormatter stringFromNumber:[NSNumber numberWithInt:priceRangeMax]]];
+                        [priceFormatter stringFromNumber:@(priceRangeMin)],
+                        [priceFormatter stringFromNumber:@(priceRangeMax)]];
 	} else {
 		int priceRangeMin = (int)[price integerValue] - 10;
 		int priceRangeMax = (int)[price integerValue] + 10;
 		priceLabel.text = [NSString stringWithFormat:@"%@ - %@",
-						   [priceFormatter stringFromNumber:[NSNumber numberWithInt:priceRangeMin]],
-						   [priceFormatter stringFromNumber:[NSNumber numberWithInt:priceRangeMax]]];
+                        [priceFormatter stringFromNumber:@(priceRangeMin)],
+                        [priceFormatter stringFromNumber:@(priceRangeMax)]];
 	}
 	[priceFormatter setMinimumFractionDigits:2];
 }
@@ -231,7 +231,7 @@
 		[listingLabel setFrame:frame];
 		listingLabel.attributedText = [[NSAttributedString alloc] initWithString:listing.description attributes:attrs];
 		[listingLabel sizeToFit];
-		[self->descriptonHeights addObject:[NSNumber numberWithFloat:listingLabel.bounds.size.height+26]];
+        [self->descriptonHeights addObject:@(listingLabel.bounds.size.height + 26)];
 	}
 }
 
@@ -253,7 +253,7 @@
 	NSInteger userId = userInfo.user ? userInfo.user.id : 0;
 	NSString *url = [NSString stringWithFormat:@"filterlocation/0?filter=%@&id=%ld", filter, (long)userId];
 	NSMutableDictionary *locDict = [ZOLocation dictionaryWithLocation:location];
-	[ws filterItemsForLocation:[NSDictionary dictionaryWithObjectsAndKeys:locDict, @"location", nil] service:url method:@"POST"];
+    [ws filterItemsForLocation:@{@"location" : locDict} service:url method:@"POST"];
 	
 	[self.progressView setHidden:NO];
 	[self.progressView setProgress:0.4 animated:YES];
@@ -265,7 +265,7 @@
 	NSInteger userId = userInfo.user ? userInfo.user.id : 0;
 	NSString *url = [NSString stringWithFormat:@"listingsbylocation/0/5?id=%ld", (long)userId];
 	NSMutableDictionary *locDict = [ZOLocation dictionaryWithLocation:location];
-	[ws getItemsForLocation:[NSDictionary dictionaryWithObjectsAndKeys:locDict, @"location", nil] :url :@"POST"];
+    [ws getItemsForLocation:@{@"location" : locDict} :url :@"POST"];
 	[self.progressView setHidden:NO];
 	[self.progressView setProgress:0.4 animated:YES];
 }
@@ -290,36 +290,36 @@
 	if (response.count) {
 		NSMutableArray *receivedItems = [[NSMutableArray alloc] initWithCapacity:3];
 		for (NSDictionary *dict in response) {
-			NSDictionary *listDict = [dict objectForKey:@"listing"];
-			NSDictionary *locDict = [dict objectForKey:@"location"];
-			NSDictionary *userDict = [dict objectForKey:@"user"];
-			if ([(NSArray *)[listDict objectForKey:@"pictures"] count]) {
+			NSDictionary *listDict = dict[@"listing"];
+			NSDictionary *locDict = dict[@"location"];
+			NSDictionary *userDict = dict[@"user"];
+			if ([(NSArray *) listDict[@"pictures"] count]) {
 				YGUser *user = [[YGUser alloc] init];
-				user.id = [[userDict objectForKey:@"id"] intValue];
-				user.name = [userDict objectForKey:@"name"];
-				user.surname = [userDict objectForKey:@"surname"];
-				user.email = [userDict objectForKey:@"email"];
-				user.isMerchant = [userDict objectForKey:@"isMerchant"];
-				user.fbuserid = [userDict objectForKey:@"fbuserid"];
-				NSString *rawUpdateDate = [listDict objectForKey:@"updated_on"];
+				user.id = [userDict[@"id"] intValue];
+				user.name = userDict[@"name"];
+				user.surname = userDict[@"surname"];
+				user.email = userDict[@"email"];
+				user.isMerchant = userDict[@"isMerchant"];
+				user.fbuserid = userDict[@"fbuserid"];
+				NSString *rawUpdateDate = listDict[@"updated_on"];
 				NSString *dateStr = [rawUpdateDate substringToIndex:rawUpdateDate.length-2];
 				NSDate *date = [df dateFromString:dateStr];
 				ListingRecord *listing = [[ListingRecord alloc] init];
-				listing.id = [NSNumber numberWithInt:[[listDict objectForKey:@"id"] intValue]];
-				listing.title = [listDict objectForKey:@"title"];
-				listing.description = [listDict objectForKey:@"description"];
-				listing.locale = [listDict objectForKey:@"locale"];
+				listing.id = @([listDict[@"id"] intValue]);
+				listing.title = listDict[@"title"];
+				listing.description = listDict[@"description"];
+				listing.locale = listDict[@"locale"];
 				listing.pictures = [[NSMutableArray alloc] initWithCapacity:5];
 				listing.picturesCache = [[NSCache alloc] init];
-				listing.highlight = [[listDict objectForKey:@"highlight"] boolValue];
-				listing.waggle = [[listDict objectForKey:@"waggle"] boolValue];
+				listing.highlight = [listDict[@"highlight"] boolValue];
+				listing.waggle = [listDict[@"waggle"] boolValue];
 				listing.icons = [[NSCache alloc] init];
-				listing.pictureNames = [listDict objectForKey:@"pictures"];
-				listing.price = [NSNumber numberWithFloat:[[listDict objectForKey:@"price"] floatValue]];
-				listing.shop = [listDict objectForKey:@"shop"];
-				listing.telephone = [listDict objectForKey:@"telephone"];
+				listing.pictureNames = listDict[@"pictures"];
+				listing.price = @([listDict[@"price"] floatValue]);
+				listing.shop = listDict[@"shop"];
+				listing.telephone = listDict[@"telephone"];
 				if ([listing.telephone isEqual:[NSNull null]]) listing.telephone = Nil;
-				listing.userid = [[listDict objectForKey:@"userid"] intValue];
+				listing.userid = [listDict[@"userid"] intValue];
 				listing.updated_on = [date formattedDateRelativeToNow:date];
 				listing.location = locDict;
 				listing.user = user;
@@ -383,14 +383,14 @@
 	if (filter.length) {
 		bool found = NO;
 		for (NSMutableDictionary *searchDict in self.appSettings.searchHistory) {
-			if ([filter isEqualToString:[searchDict objectForKey:@"searchString"]]) {
+			if ([filter isEqualToString:searchDict[@"searchString"]]) {
 				found = YES;
-				[searchDict setObject:[NSDate date] forKey:@"date"];
+				searchDict[@"date"] = [NSDate date];
 				break;
 			}
 		}
 		if (!found) {
-			[self.appSettings.searchHistory addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:filter, @"searchString", [NSDate date], @"date", nil]];
+            [self.appSettings.searchHistory addObject:[@{@"searchString" : filter, @"date" : [NSDate date]} mutableCopy]];
 		}
 	}
 }
@@ -407,7 +407,7 @@
 	if (!self->waggling && self.collectionView.collectionViewLayout == self.listLayout) {
 		for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
 			NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-			ListingRecord *listing = (ListingRecord *)[self.itemsLocally objectAtIndex:indexPath.item];
+			ListingRecord *listing = (ListingRecord *) (self.itemsLocally)[(NSUInteger) indexPath.item];
 			if (listing.waggle) {
 				self->waggling = YES;
 				UIView *priceView = [cell.contentView viewWithTag:40];
@@ -485,9 +485,10 @@
 		CGPoint stopPoint = {0,-66};
 		targetContentOffset->y = stopPoint.y;
 		if (velocity.y != 0) {
-			[UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocity.y options:UIViewAnimationCurveLinear | UIViewAnimationOptionAllowUserInteraction animations:^{
-				[scrollView setContentOffset:stopPoint];
-			} completion:^(BOOL finished) {}];
+            [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:1 initialSpringVelocity:velocity.y options:(UIViewAnimationOptions) (UIViewAnimationCurveLinear | UIViewAnimationOptionAllowUserInteraction) animations:^{
+                [scrollView setContentOffset:stopPoint];
+            }                completion:^(BOOL finished) {
+            }];
 		} // else [scrollView setContentOffset:stopPoint animated:YES];
 		
 		if (self->searchString && ![[self->searchString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""]) {
@@ -619,7 +620,7 @@
 	UILabel *priceLabel;
 	YGRatingView *rating;
 	
-	ListingRecord *listing = (ListingRecord *)[self.itemsLocally objectAtIndex:indexPath.row];
+	ListingRecord *listing = (ListingRecord *) (self.itemsLocally)[(NSUInteger) indexPath.row];
 	
 	switch (indexPath.section) {
 		case 0:
@@ -649,7 +650,7 @@
 			
 			if (self.listLayout == collectionView.collectionViewLayout) {
 				
-				size = [price sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont systemFontOfSize:13],NSFontAttributeName, nil]];
+				size = [price sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:13]}];
 				frame = CGRectMake(301-size.width, 16, size.width+11, size.height+4);
 				priceView = (YGPriceView *)[cell.contentView viewWithTag:40];
 				if (priceView) [priceView removeFromSuperview];
@@ -826,7 +827,7 @@
 				[self renderListingIcon:aListing atIndexPath:indexPath];
 			}
 			NSNotificationCenter *centre = [NSNotificationCenter defaultCenter];
-			NSDictionary *dictWithListing = [[NSDictionary alloc] initWithObjectsAndKeys:aListing, @"listing", nil];
+			NSDictionary *dictWithListing = @{@"listing" : aListing};
 			[centre postNotificationName:@"ListingPicturesDownloaded" object:nil userInfo:dictWithListing];
 			if (aListing.pictures.count < aListing.pictureNames.count) {
 				[self downloadPicturesInListing:aListing index:index+1];
@@ -843,7 +844,7 @@
 	if (listing.pictures.count) {
 		dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul);
 		dispatch_async(queue, ^{
-			NSString *fullPathToImage = [NSString stringWithFormat:@"%@",[listing.pictures objectAtIndex:0]];
+			NSString *fullPathToImage = [NSString stringWithFormat:@"%@", (listing.pictures)[0]];
 			UIImage *image = [UIImage imageWithContentsOfFile:fullPathToImage];
 			CGRect rect;
 			CGImageRef imageRef;
@@ -891,7 +892,7 @@
     // Pass the selected object to the new view controller.
 	if ([segue.identifier isEqualToString:@"itemDetailSegue"]) {
 		NSIndexPath *indexPath = (NSIndexPath *)sender;
-		id listing = self.itemsLocally[indexPath.row];
+		id listing = self.itemsLocally[(NSUInteger) indexPath.row];
 		[[segue destinationViewController] setListing:listing];
 	}
 }

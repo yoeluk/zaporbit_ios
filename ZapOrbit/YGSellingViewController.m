@@ -28,7 +28,7 @@
 }
 
 -(void) configureDetailView:(YGDetailItemController *)itemDetailViewCtrl  buyerId:(NSString *)buyerid {
-	[itemDetailViewCtrl setBuyerId:[NSNumber numberWithInt:(int)[buyerid integerValue]]];
+    [itemDetailViewCtrl setBuyerId:@((int) [buyerid integerValue])];
 }
 
 - (IBAction)showInfo:(UIButton *)sender {
@@ -147,16 +147,16 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	
 	NSMutableDictionary *feedbackDict = [[NSMutableDictionary alloc] initWithCapacity:3];
-	[feedbackDict setObject:feedback forKey:@"feedback"];
-	[feedbackDict setObject:[NSNumber numberWithInt:(int)self->userInfo.user.id] forKey:@"by_userid"];
-	[feedbackDict setObject:userid forKey:@"userid"];
-	[feedbackDict setObject:transid forKey:@"transid"];
+	feedbackDict[@"feedback"] = feedback;
+    feedbackDict[@"by_userid"] = @((int) self->userInfo.user.id);
+	feedbackDict[@"userid"] = userid;
+	feedbackDict[@"transid"] = transid;
 	
 	NSMutableDictionary *data = [[NSMutableDictionary alloc] initWithCapacity:3];
 	if (rating) {
-		[data setObject:rating forKey:@"rating"];
+		data[@"rating"] = rating;
 	}
-	[data setObject:feedbackDict forKey:@"feedback"];
+	data[@"feedback"] = feedbackDict;
 	
 	NSError *error = nil;
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
