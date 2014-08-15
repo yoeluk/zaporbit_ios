@@ -10,12 +10,6 @@
 #import "YGSellerViewController.h"
 #import "YGComposerViewController.h"
 #import "YGMapViewController.h"
-#import "ListingRecord.h"
-#import "YGPicturesDownloader.h"
-#import "YGTableViewCell.h"
-#import "ZOLocation.h"
-#import "YGImage.h"
-#import "VALabel.h"
 
 static NSString *kApiUrl = @"http://zaporbit.com/api/";
 
@@ -348,7 +342,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 					size = CGSizeMake(image.size.width*226/image.size.height, 226);
 					//NSLog(@"size {%f, %f", size.width, size.height);
 					dispatch_async(dispatch_get_main_queue(), ^{
-						UICollectionViewCell *updateCell = (UICollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+						UICollectionViewCell *updateCell = [collectionView cellForItemAtIndexPath:indexPath];
 						if (updateCell) {
 							pictureView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
 							[pictureView setImage:image];
@@ -396,19 +390,19 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 		[self->tappedImageView setHidden:YES];
 		blindView.contentMode = UIViewContentModeScaleAspectFit;
 		imageView.contentMode = UIViewContentModeScaleAspectFit;
-		[UIView animateWithDuration:0.35 delay:0 options:0 animations:^{
-			imageView.transform = self->fullImageTransform;
-			blindView.transform = self->fullImageTransform;
-			[blindView setFrame:[self.view bounds]];
-			[imageView setFrame:[self.view bounds]];
-		} completion:^(BOOL finished) {
-			self->shouldHideStatusBar = YES;
-			[self setNeedsStatusBarAppearanceUpdate];
-			UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(fullScreenPicture:)];
-			[tap setCancelsTouchesInView:NO];
-			[blindView addGestureRecognizer:tap];
-			self->imageFullScreen = YES;
-		}];
+        [UIView animateWithDuration:0.35 delay:0 options:(UIViewAnimationOptions) 0 animations:^{
+            imageView.transform = self->fullImageTransform;
+            blindView.transform = self->fullImageTransform;
+            [blindView setFrame:[self.view bounds]];
+            [imageView setFrame:[self.view bounds]];
+        }                completion:^(BOOL finished) {
+            self->shouldHideStatusBar = YES;
+            [self setNeedsStatusBarAppearanceUpdate];
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(fullScreenPicture:)];
+            [tap setCancelsTouchesInView:NO];
+            [blindView addGestureRecognizer:tap];
+            self->imageFullScreen = YES;
+        }];
 		return;
 	} else {
 		UIView *imageView;
@@ -420,17 +414,17 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 		}
 		self->shouldHideStatusBar = NO;
 		[self setNeedsStatusBarAppearanceUpdate];
-		[UIView animateWithDuration:0.35 delay:0 options:0 animations:^{
-			imageView.transform = CGAffineTransformIdentity;
-			blindView.transform = CGAffineTransformIdentity;
-			[imageView setFrame:self->imageRectInRootView];
-			[blindView setFrame:self->imageRectInRootView];
-		}completion:^(BOOL finished){
-			[self->tappedImageView setHidden:NO];
-			[imageView removeFromSuperview];
-			[blindView removeFromSuperview];
-			self->imageFullScreen = NO;
-		}];
+        [UIView animateWithDuration:0.35 delay:0 options:(UIViewAnimationOptions) 0 animations:^{
+            imageView.transform = CGAffineTransformIdentity;
+            blindView.transform = CGAffineTransformIdentity;
+            [imageView setFrame:self->imageRectInRootView];
+            [blindView setFrame:self->imageRectInRootView];
+        }                completion:^(BOOL finished) {
+            [self->tappedImageView setHidden:NO];
+            [imageView removeFromSuperview];
+            [blindView removeFromSuperview];
+            self->imageFullScreen = NO;
+        }];
 		return;
 	}
 }

@@ -8,10 +8,7 @@
 
 #import "YGSellTableViewController.h"
 #import "YGPriceView.h"
-#import "VALabel.h"
 #import "ListingRecord.h"
-#import "ImageDownloader.h"
-#import "YGTableViewCell.h"
 
 
 @interface YGSellTableViewController ()
@@ -134,13 +131,13 @@
 		for (UITableViewCell *cell in [self.tableView visibleCells]) {
 			UIView *priceView = [cell.contentView viewWithTag:40];
 			[UIView animateWithDuration:0.2 animations:^{
-				priceView.transform = CGAffineTransformMakeRotation(-0.2);
+				priceView.transform = CGAffineTransformMakeRotation((CGFloat) -0.2);
 			} completion:^(BOOL finished) {
 				[UIView animateWithDuration:0.2 animations:^{
 					priceView.transform = CGAffineTransformMakeRotation(0.2);
 				} completion:^(BOOL finished) {
 					[UIView animateWithDuration:0.2 animations:^{
-						priceView.transform = CGAffineTransformMakeRotation(-0.2);
+						priceView.transform = CGAffineTransformMakeRotation((CGFloat) -0.2);
 					} completion:^(BOOL finished) {
 						[UIView animateWithDuration:0.2 animations:^{
 							priceView.transform = CGAffineTransformMakeRotation(0.2);

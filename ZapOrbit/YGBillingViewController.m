@@ -7,10 +7,6 @@
 //
 
 #import "YGBillingViewController.h"
-#import "YGAppDelegate.h"
-#import "VALabel.h"
-
-static NSString *kApiUrl = @"https://zaporbit.com/api/";
 
 @interface YGBillingViewController ()
 
@@ -112,7 +108,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	return indexPath.row == 0? 44 : self->heights.count? self->heights.count < indexPath.row ? 44 : [(self->heights)[indexPath.row - 1] floatValue] : 0;
+	return indexPath.row == 0? 44 : self->heights.count? self->heights.count < indexPath.row ? 44 : [(self->heights)[(NSUInteger) (indexPath.row - 1)] floatValue] : 0;
 }
 
 #pragma mark - Table view data source

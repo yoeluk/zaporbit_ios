@@ -57,7 +57,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
     [FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id response, NSError *error) {
         NSMutableArray *friends = [NSMutableArray new];
         if (!error) {
-            [friends addObjectsFromArray:(NSArray*)[response data]];
+            [friends addObjectsFromArray:[response data]];
         }
         callback(friends);
     }];
@@ -95,8 +95,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 			break;
 		}
 	}
-	if (following) followSwitch.on = YES;
-	else followSwitch.on = NO;
+    followSwitch.on = following;
 	
 	return cell;
 }

@@ -11,11 +11,7 @@
 #import "ZOLocallyLongCell.h"
 #import "ZOLocallyTilesCell.h"
 #import "YGPriceView.h"
-#import "VALabel.h"
-#import "ListingRecord.h"
-#import "ImageDownloader.h"
 #import "YGAppDelegate.h"
-#import "YGPicturesDownloader.h"
 
 @implementation YGLocallyViewController
 
@@ -413,7 +409,7 @@
 				UIView *priceView = [cell.contentView viewWithTag:40];
 				[UIView animateWithDuration:0.2 animations:^{
 					if (priceView)
-						priceView.transform = CGAffineTransformMakeRotation(-0.2);
+						priceView.transform = CGAffineTransformMakeRotation((CGFloat) -0.2);
 				} completion:^(BOOL finished) {
 					[UIView animateWithDuration:0.2 animations:^{
 						if (priceView)
@@ -421,7 +417,7 @@
 					} completion:^(BOOL finished) {
 						[UIView animateWithDuration:0.2 animations:^{
 							if (priceView)
-								priceView.transform = CGAffineTransformMakeRotation(-0.2);
+								priceView.transform = CGAffineTransformMakeRotation((CGFloat) -0.2);
 						} completion:^(BOOL finished) {
 							[UIView animateWithDuration:0.2 animations:^{
 								if (priceView)

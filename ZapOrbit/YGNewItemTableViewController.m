@@ -556,7 +556,7 @@
 				pictureView.tag = 20;
 				[cell.contentView addSubview:pictureView];
 			} else {
-				[self renderListingPicture:_listing atIndex:(int)indexPath.row];
+                [self renderListingPicture:_listing atIndex:(NSUInteger) (int) indexPath.row];
 			}
 			break;
 		case 1:
@@ -684,7 +684,7 @@
 			if (listing.pictures.count < listing.pictureNames.count) {
 				[self downloadPicturesInListing:listing index:index+1];
 			}
-			[self renderListingPicture:listing atIndex:index];
+            [self renderListingPicture:listing atIndex:(NSUInteger) index];
 		}];
 		[picturesDownloader startDownload:index];
 	}
@@ -701,7 +701,7 @@
 		if (image.size.width < image.size.height) {
 			rect = CGRectMake(0, (image.size.height - image.size.width)/2, image.size.width, (CGFloat) (image.size.width/1.3));
 			CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
-			image = (UIImage *)[UIImage imageWithCGImage:imageRef];
+			image = [UIImage imageWithCGImage:imageRef];
 			CFRelease(imageRef);
 		}
         [listing.picturesCache setObject:image forKey:(listing.pictureNames)[(NSUInteger) index]];

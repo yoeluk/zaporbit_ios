@@ -9,8 +9,6 @@
 #import "YGWebService.h"
 #import "ListingRecord.h"
 #import "RNEncryptor.h"
-#import "RNDecryptor.h"
-#import <CommonCrypto/CommonHMAC.h>
 
 static NSString *kUrlHead = @"https://zaporbit.com/api/";
 static NSString *password = @"bjmlBqAfiBEQ4oZfaGtI0oMcd5IGkCp";

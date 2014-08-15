@@ -106,7 +106,7 @@
 
 -(void)postFeedback:(NSString *)feedback withRating:(NSNumber *)rating forUser:(NSNumber *)userid forTransaction:(NSNumber *)transid {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"FeedbackEnded" object:nil];
-	[self httpPostWithCustomDelegate:feedback withRating:rating forUser:userid forTransaction:(NSNumber *)transid];
+	[self httpPostWithCustomDelegate:feedback withRating:rating forUser:userid forTransaction:transid];
 }
 
 -(void) httpPostWithCustomDelegate:(NSString *)feedback withRating:(NSNumber *)rating forUser:(NSNumber *)userid forTransaction:(NSNumber *)transid {

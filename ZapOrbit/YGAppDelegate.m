@@ -11,12 +11,11 @@
 #import <GooglePlus/GooglePlus.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import "RNEncryptor.h"
-#import "RNDecryptor.h"
 #import "AppSettings.h"
 
 #define kAppVersion @"v1"
 
-static NSString * const kGoogleClientId = @"252408930349-1otbutcank3df2grgcav7djt4o7c6trc.apps.googleusercontent.com";
+//static NSString * const kGoogleClientId = @"252408930349-1otbutcank3df2grgcav7djt4o7c6trc.apps.googleusercontent.com";
 
 @implementation YGAppDelegate
 @synthesize appSettings = _appSettings;

@@ -7,7 +7,6 @@
 //
 
 #import "YGInnerCollectionView.h"
-#import "YGPicturesDownloader.h"
 #import "YGLocallyViewController.h"
 
 @implementation YGInnerCollectionView
@@ -258,19 +257,19 @@
 		[self->tappedImageView setHidden:YES];
 		blindView.contentMode = UIViewContentModeScaleAspectFit;
 		imageView.contentMode = UIViewContentModeScaleAspectFit;
-		[UIView animateWithDuration:0.35 delay:0 options:0 animations:^{
-			imageView.transform = self->fullImageTransform;
-			blindView.transform = self->fullImageTransform;
-			[blindView setFrame:[[UIScreen mainScreen] bounds]];
-			[imageView setFrame:[[UIScreen mainScreen] bounds]];
-		} completion:^(BOOL finished) {
-			((YGLocallyViewController *)self.window.rootViewController)->shouldHideStatusBar = YES;
-			[self.window.rootViewController setNeedsStatusBarAppearanceUpdate];
-			UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(fullScreenPicture:)];
-			[tap setCancelsTouchesInView:NO];
-			[blindView addGestureRecognizer:tap];
-			self->imageFullScreen = YES;
-		}];
+        [UIView animateWithDuration:0.35 delay:0 options:(UIViewAnimationOptions) 0 animations:^{
+            imageView.transform = self->fullImageTransform;
+            blindView.transform = self->fullImageTransform;
+            [blindView setFrame:[[UIScreen mainScreen] bounds]];
+            [imageView setFrame:[[UIScreen mainScreen] bounds]];
+        }                completion:^(BOOL finished) {
+            ((YGLocallyViewController *) self.window.rootViewController)->shouldHideStatusBar = YES;
+            [self.window.rootViewController setNeedsStatusBarAppearanceUpdate];
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(fullScreenPicture:)];
+            [tap setCancelsTouchesInView:NO];
+            [blindView addGestureRecognizer:tap];
+            self->imageFullScreen = YES;
+        }];
 	} else {
 		UIView *imageView;
 		UIView *blindView;
@@ -282,37 +281,37 @@
 		((YGLocallyViewController *)self.window.rootViewController)->shouldHideStatusBar = NO;
 		[self.window.rootViewController setNeedsStatusBarAppearanceUpdate];
 		if (!CGAffineTransformIsIdentity(self->fullImageTransform)) {
-			[UIView animateWithDuration:0.35 delay:0 options:0 animations:^{
-				imageView.transform = CGAffineTransformIdentity;
-				blindView.transform = CGAffineTransformIdentity;
-				[imageView setFrame:self->imageRectInRootView];
-				[blindView setFrame:self->imageRectInRootView];
-			} completion:^(BOOL finished){
-				[self->tappedImageView setHidden:NO];
-				[blindView removeFromSuperview];
-				[imageView removeFromSuperview];
-				self->imageFullScreen = NO;
-			}];
+            [UIView animateWithDuration:0.35 delay:0 options:(UIViewAnimationOptions) 0 animations:^{
+                imageView.transform = CGAffineTransformIdentity;
+                blindView.transform = CGAffineTransformIdentity;
+                [imageView setFrame:self->imageRectInRootView];
+                [blindView setFrame:self->imageRectInRootView];
+            }                completion:^(BOOL finished) {
+                [self->tappedImageView setHidden:NO];
+                [blindView removeFromSuperview];
+                [imageView removeFromSuperview];
+                self->imageFullScreen = NO;
+            }];
 		} else {
 			UIImageView *copyImageView = [[UIImageView alloc] initWithImage:((UIImageView *)self->tappedImageView).image];
 			[copyImageView setFrame:CGRectMake(0, 2*64, 320, self->tappedImageView.bounds.size.height)];
 			[copyImageView setAlpha:0.2f];
 			[self.window addSubview:copyImageView];
-			[UIView animateWithDuration:0.35 delay:0 options:0 animations:^{
-				[imageView setFrame:self->imageRectInRootView];
-				[blindView setFrame:self->imageRectInRootView];
-				[copyImageView setFrame:self->imageRectInRootView];
-				//[blindView setAlpha:0.f];
-				[imageView setAlpha:0.f];
-				[copyImageView setAlpha:1.f];
-				[self->tappedImageView setAlpha:1.f];
-			} completion:^(BOOL finished){
-				[self->tappedImageView setHidden:NO];
-				[copyImageView removeFromSuperview];
-				[blindView removeFromSuperview];
-				[imageView removeFromSuperview];
-				self->imageFullScreen = NO;
-			}];
+            [UIView animateWithDuration:0.35 delay:0 options:(UIViewAnimationOptions) 0 animations:^{
+                [imageView setFrame:self->imageRectInRootView];
+                [blindView setFrame:self->imageRectInRootView];
+                [copyImageView setFrame:self->imageRectInRootView];
+                //[blindView setAlpha:0.f];
+                [imageView setAlpha:0.f];
+                [copyImageView setAlpha:1.f];
+                [self->tappedImageView setAlpha:1.f];
+            }                completion:^(BOOL finished) {
+                [self->tappedImageView setHidden:NO];
+                [copyImageView removeFromSuperview];
+                [blindView removeFromSuperview];
+                [imageView removeFromSuperview];
+                self->imageFullScreen = NO;
+            }];
 		}
 	}
 }

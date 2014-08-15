@@ -32,7 +32,7 @@
 	UIGraphicsBeginImageContextWithOptions(self.size, NO, self.scale);
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	CGContextTranslateCTM(context, 0, self.size.height);
-	CGContextScaleCTM(context, 1.0, -1.0);
+	CGContextScaleCTM(context, 1.0, (CGFloat) -1.0);
 	CGContextSetBlendMode(context, kCGBlendModeNormal);
 	CGRect rect = CGRectMake(0, 0, self.size.width, self.size.height);
 	CGContextClipToMask(context, rect, self.CGImage);
@@ -118,7 +118,7 @@
 												 colorSpace,
 												 // kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little
 												 // makes system don't need to do extra conversion when displayed.
-												 kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little);
+            (CGBitmapInfo) (kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Little));
 	CGColorSpaceRelease(colorSpace);
 	
 	if ( ! context) {

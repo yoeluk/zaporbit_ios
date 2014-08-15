@@ -9,8 +9,6 @@
 #import "YGHomeViewController.h"
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import "YGInboxViewController.h"
-#import "YGUser.h"
-#import "YGRatingView.h"
 
 static NSString * const kGoogleClientId = @"252408930349-1otbutcank3df2grgcav7djt4o7c6trc.apps.googleusercontent.com";
 static NSString *kUrlHead = @"https://zaporbit.com/api/";

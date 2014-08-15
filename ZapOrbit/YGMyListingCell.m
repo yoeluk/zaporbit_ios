@@ -31,8 +31,8 @@
 
 - (void)didTransitionToState:(UITableViewCellStateMask)state {
 	[super didTransitionToState:state];
-	UIView *priceView = (UIView *)[self.contentView viewWithTag:40];
-	UIView *shareButton = (UIView *)[self.contentView viewWithTag:13];
+	UIView *priceView = [self.contentView viewWithTag:40];
+	UIView *shareButton = [self.contentView viewWithTag:13];
 	if (self->aState != state && state == UITableViewCellStateShowingEditControlMask) {
 		self->aState = state;
 		priceView.hidden = YES;

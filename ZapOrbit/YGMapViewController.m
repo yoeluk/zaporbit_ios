@@ -9,8 +9,6 @@
 #import "YGMapViewController.h"
 #import "YGDirectionServices.h"
 #import "YGAppDelegate.h"
-#import "YGUserInfo.h"
-#import "ZOLocation.h"
 
 static int locationObservanceContext;
 

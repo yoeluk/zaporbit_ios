@@ -8,7 +8,7 @@
 #import "ImageDownloader.h"
 #import "ListingRecord.h"
 
-#define kAppIconSize 70
+//#define kAppIconSize 70
 
 @interface ImageDownloader ()
 @property (nonatomic, strong) NSMutableData *activeDownload;

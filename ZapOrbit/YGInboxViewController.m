@@ -260,7 +260,7 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 		case 0:
 			cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier forIndexPath:indexPath];
 			
-			convo = (self.conversations)[indexPath.row];
+			convo = (self.conversations)[(NSUInteger) indexPath.row];
 			conversation = convo[@"conversation"];
 			messages = conversation[@"messages"];
 			newestMessage = messages[messages.count - 1];

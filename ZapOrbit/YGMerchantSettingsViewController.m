@@ -10,8 +10,6 @@
 #import "GCPlaceholderTextView.h"
 #import "YGAppDelegate.h"
 
-static NSString *kApiUrl = @"https://zaporbit.com/api/";
-
 @interface YGMerchantSettingsViewController ()
 
 @end

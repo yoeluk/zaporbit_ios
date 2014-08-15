@@ -41,7 +41,7 @@
 	CAShapeLayer *shapeMask = [CAShapeLayer layer];
 	//UIBezierPath *ovalPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(2.0, 2.0, CGRectGetWidth(rect), CGRectGetHeight(rect))];
 	CGRect ovalRect = CGRectMake(2.0, 2.0, CGRectGetWidth(rect), CGRectGetHeight(rect));
-	CGAffineTransform transform = CGAffineTransformMakeRotation(3.14/4);
+	CGAffineTransform transform = CGAffineTransformMakeRotation((CGFloat) (3.14/4));
 	CGPathRef path = CGPathCreateWithEllipseInRect(ovalRect, &transform);
 	shapeMask.path = path;
 	[self.layer setMask:shapeMask];
