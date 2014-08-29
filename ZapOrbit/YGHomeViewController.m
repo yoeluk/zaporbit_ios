@@ -37,7 +37,7 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	self.fbLoginView.delegate = self;
 	self.fbLoginView.tag = 15;
 	
-	_profilePictureView = [[FBProfilePictureView alloc] initWithFrame:CGRectMake(-25, 15, 70, 70)];
+	_profilePictureView = [[FBProfilePictureView alloc] initWithFrame:CGRectMake(0, 0, 70, 70)];
 	[_ovalPicView addSubview:_profilePictureView];
 	
 	CALayer *topBorder = [CALayer layer];

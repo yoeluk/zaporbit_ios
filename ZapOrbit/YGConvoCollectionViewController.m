@@ -93,13 +93,17 @@
 - (void)getUsersPictures {
     self->uPicImage = nil;
     NSURL *picUserURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", self.toUser.fbuserid]];
-    NSURLSessionDataTask *meSession = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:picUserURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSURLSessionDataTask *meSession = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]]
+									   dataTaskWithURL:picUserURL
+									   completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if ([(NSHTTPURLResponse *) response statusCode] == 200 && data) {
             self->uPicImage = (YGImage *) [UIImage imageWithData:data];
         }
         if (self->mePicImage == nil) {
             NSURL *picMeURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", self.me.fbuserid]];
-            NSURLSessionDataTask *uSession = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:picMeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            NSURLSessionDataTask *uSession = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]]
+											  dataTaskWithURL:picMeURL
+											  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
                 if ([(NSHTTPURLResponse *) response statusCode] == 200 && data) {
                     self->mePicImage = (YGImage *) [UIImage imageWithData:data];
                 }
@@ -244,7 +248,7 @@
                     UIImageView *picView = [[UIImageView alloc] initWithImage:[self->mePicImage copy]];
                     picView.contentMode = UIViewContentModeScaleAspectFill;
                     picView.tag = 55;
-                    [picView setFrame:CGRectMake(-19, 12, 60, 60)];
+                    [picView setFrame:CGRectMake(0, 0, 60, 60)];
                     [[cell.contentView viewWithTag:66] addSubview:picView];
                 }
             } else if ([message[@"senderid"] longLongValue] == self.toUser.id) {
@@ -253,7 +257,7 @@
                     UIImageView *picView = [[UIImageView alloc] initWithImage:[self->uPicImage copy]];
                     picView.contentMode = UIViewContentModeScaleAspectFill;
                     picView.tag = 55;
-                    [picView setFrame:CGRectMake(-19, 12, 60, 60)];
+                    [picView setFrame:CGRectMake(0, 0, 60, 60)];
                     [[cell.contentView viewWithTag:66] addSubview:picView];
                 }
             }

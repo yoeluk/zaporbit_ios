@@ -267,7 +267,7 @@
 }
 
 -(void)coughRequestedData:(NSData *)data {
-	NSMutableArray *response = (NSMutableArray *)[NSJSONSerialization JSONObjectWithData:data
+	NSMutableDictionary *response = (NSMutableDictionary *)[NSJSONSerialization JSONObjectWithData:data
 																				 options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves
 																				   error:nil];
 	NSDateFormatter *df = [[NSDateFormatter alloc] init];
@@ -283,9 +283,9 @@
 	[fileManager removeItemAtPath:directory error:&error];
 	[fileManager removeItemAtPath:profilePics error:&error];
 	
-	if (response.count) {
+	if (response[@"listings"] && ((NSMutableArray *)response[@"listings"]).count) {
 		NSMutableArray *receivedItems = [[NSMutableArray alloc] initWithCapacity:3];
-		for (NSDictionary *dict in response) {
+		for (NSDictionary *dict in ((NSMutableArray *)response[@"listings"])) {
 			NSDictionary *listDict = dict[@"listing"];
 			NSDictionary *locDict = dict[@"location"];
 			NSDictionary *userDict = dict[@"user"];
@@ -682,22 +682,22 @@
 						if ([userFound.picCache objectForKey:@"pic"]) {
 							[profilePicView setImage:(UIImage *)[userFound.picCache objectForKey:@"pic"]];
 							profilePicView.contentMode = UIViewContentModeScaleAspectFill;
-							[profilePicView setFrame:CGRectMake(-19, 12, 60, 60)];
+							[profilePicView setFrame:CGRectMake(0, 0, 60, 60)];
 						} else {
 							[profilePicView setImage:nil];//[[UIImage imageNamed:@"profile-placeholder2"] imageWithTintColor:[UIColor colorWithRed:148/255.f green:184/255.f blue:221/255.f alpha:1]]];
-							[profilePicView setFrame:CGRectMake(-19, 12, 60, 60)];
+							[profilePicView setFrame:CGRectMake(0, 0, 60, 60)];
 							[profilePicView setContentMode:UIViewContentModeScaleAspectFill];
 							[self renderProfilePicture:userFound forIndexPath:indexPath];
 						}
 					} else {
 						[profilePicView setImage:nil];//[[UIImage imageNamed:@"profile-placeholder2"] imageWithTintColor:[UIColor colorWithRed:148/255.f green:184/255.f blue:221/255.f alpha:1]]];
-						[profilePicView setFrame:CGRectMake(-19, 12, 60, 60)];
+						[profilePicView setFrame:CGRectMake(0, 0, 60, 60)];
 						[profilePicView setContentMode:UIViewContentModeScaleAspectFill];
 						[self profilePictureDownload:listing.user forIndexPath:indexPath];
 					}
 				} else {
 					[profilePicView setImage:(UIImage *)[listing.user.picCache objectForKey:@"pic"]];
-					[profilePicView setFrame:CGRectMake(-15, 20, 50, 50)];
+					[profilePicView setFrame:CGRectMake(0, 0, 50, 50)];
 					[profilePicView setContentMode:UIViewContentModeScaleAspectFill];
 				}
 				

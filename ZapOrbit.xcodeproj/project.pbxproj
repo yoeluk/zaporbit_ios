@@ -128,6 +128,7 @@
 		296FA47018EAEA4100711E13 /* RNOpenSSLCryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 296FA46718EAEA4100711E13 /* RNOpenSSLCryptor.m */; };
 		296FA47118EAEA4100711E13 /* RNOpenSSLDecryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 296FA46918EAEA4100711E13 /* RNOpenSSLDecryptor.m */; };
 		296FA47218EAEA4100711E13 /* RNOpenSSLEncryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 296FA46B18EAEA4100711E13 /* RNOpenSSLEncryptor.m */; };
+		297D9ACF19B113CF00FC5B37 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 297D9ACE19B113CF00FC5B37 /* FacebookSDK.framework */; };
 		2994B43D18F1ED3E007B2375 /* YGDirectionServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 2994B43C18F1ED3D007B2375 /* YGDirectionServices.m */; };
 		2994B44018F2045E007B2375 /* 896-road-sign.png in Resources */ = {isa = PBXBuildFile; fileRef = 2994B43E18F2045E007B2375 /* 896-road-sign.png */; };
 		2994B44118F2045E007B2375 /* 896-road-sign@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2994B43F18F2045E007B2375 /* 896-road-sign@2x.png */; };
@@ -171,7 +172,6 @@
 		29A9B078190AF0940071F8AA /* YGScrollViewCopiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 29A9B077190AF0940071F8AA /* YGScrollViewCopiable.m */; };
 		29A9B083190B44390071F8AA /* YGInboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29A9B082190B44390071F8AA /* YGInboxViewController.m */; };
 		29A9B086190C20A10071F8AA /* YGComposerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29A9B085190C20A10071F8AA /* YGComposerViewController.m */; };
-		29B3497519508B7300DDDAF9 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B3497419508B7300DDDAF9 /* FacebookSDK.framework */; };
 		29C5DBAC18E3A281001B3774 /* GooglePlus.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 29C5DBAB18E3A281001B3774 /* GooglePlus.bundle */; };
 		29C970901919C24300B74566 /* YGTileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 29C9708F1919C24300B74566 /* YGTileView.m */; };
 		29E81E5618FD5C9D00F8B611 /* YGRecordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29E81E5518FD5C9D00F8B611 /* YGRecordsViewController.m */; };
@@ -421,6 +421,7 @@
 		296FA46918EAEA4100711E13 /* RNOpenSSLDecryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNOpenSSLDecryptor.m; sourceTree = "<group>"; };
 		296FA46A18EAEA4100711E13 /* RNOpenSSLEncryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNOpenSSLEncryptor.h; sourceTree = "<group>"; };
 		296FA46B18EAEA4100711E13 /* RNOpenSSLEncryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNOpenSSLEncryptor.m; sourceTree = "<group>"; };
+		297D9ACE19B113CF00FC5B37 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		2994B43B18F1ED3D007B2375 /* YGDirectionServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGDirectionServices.h; sourceTree = "<group>"; };
 		2994B43C18F1ED3D007B2375 /* YGDirectionServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGDirectionServices.m; sourceTree = "<group>"; };
 		2994B43E18F2045E007B2375 /* 896-road-sign.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "896-road-sign.png"; sourceTree = "<group>"; };
@@ -485,10 +486,7 @@
 		29A9B082190B44390071F8AA /* YGInboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGInboxViewController.m; sourceTree = "<group>"; };
 		29A9B084190C20A10071F8AA /* YGComposerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGComposerViewController.h; sourceTree = "<group>"; };
 		29A9B085190C20A10071F8AA /* YGComposerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGComposerViewController.m; sourceTree = "<group>"; };
-		29B3497419508B7300DDDAF9 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../../FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		29C5DBAB18E3A281001B3774 /* GooglePlus.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GooglePlus.bundle; sourceTree = "<group>"; };
-		29C5DBAD18E3A2B7001B3774 /* GooglePlus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GooglePlus.framework; path = "../../../../google-plus-ios-sdk-1.5.1/GooglePlus.framework"; sourceTree = "<group>"; };
-		29C5DBAF18E3A2BF001B3774 /* GoogleOpenSource.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleOpenSource.framework; path = "../../../../google-plus-ios-sdk-1.5.1/GoogleOpenSource.framework"; sourceTree = "<group>"; };
 		29C9708E1919C24300B74566 /* YGTileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGTileView.h; sourceTree = "<group>"; };
 		29C9708F1919C24300B74566 /* YGTileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGTileView.m; sourceTree = "<group>"; };
 		29E81E5418FD5C9D00F8B611 /* YGRecordsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGRecordsViewController.h; sourceTree = "<group>"; };
@@ -555,9 +553,9 @@
 				296FA45118E8825F00711E13 /* QuartzCore.framework in Frameworks */,
 				296FA44F18E8823F00711E13 /* OpenGLES.framework in Frameworks */,
 				296FA44D18E8823100711E13 /* libz.dylib in Frameworks */,
+				297D9ACF19B113CF00FC5B37 /* FacebookSDK.framework in Frameworks */,
 				296FA44B18E8822400711E13 /* libicucore.dylib in Frameworks */,
 				296FA44918E8821300711E13 /* libc++.dylib in Frameworks */,
-				29B3497519508B7300DDDAF9 /* FacebookSDK.framework in Frameworks */,
 				296FA44718E8820000711E13 /* ImageIO.framework in Frameworks */,
 				296FA44518E881F800711E13 /* GLKit.framework in Frameworks */,
 				2925BC2F18E1B462008060D4 /* CoreLocation.framework in Frameworks */,
@@ -718,9 +716,9 @@
 		2996C75D18D3895D00873252 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				297D9ACE19B113CF00FC5B37 /* FacebookSDK.framework */,
 				290B8023197FE58C00029702 /* GoogleOpenSource.framework */,
 				290B8021197FE58800029702 /* GooglePlus.framework */,
-				29B3497419508B7300DDDAF9 /* FacebookSDK.framework */,
 				296FA45018E8825F00711E13 /* QuartzCore.framework */,
 				296FA44E18E8823F00711E13 /* OpenGLES.framework */,
 				296FA44C18E8823100711E13 /* libz.dylib */,
@@ -731,8 +729,6 @@
 				296FA44218E881E000711E13 /* CoreData.framework */,
 				296FA44018E881D400711E13 /* AVFoundation.framework */,
 				296FA43C18E8816F00711E13 /* GoogleMaps.framework */,
-				29C5DBAF18E3A2BF001B3774 /* GoogleOpenSource.framework */,
-				29C5DBAD18E3A2B7001B3774 /* GooglePlus.framework */,
 				2925BC3818E1B4A1008060D4 /* SystemConfiguration.framework */,
 				2925BC3618E1B48B008060D4 /* Security.framework */,
 				2925BC3418E1B483008060D4 /* MediaPlayer.framework */,
@@ -1442,6 +1438,7 @@
 					"$(PROJECT_DIR)",
 					/Users/yoelusa/FacebookSDK,
 					"/Users/yoelusa/google-plus-ios-sdk-1.7.0",
+					/Users/yoelusa/Documents/FacebookSDK,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ZapOrbit/ZapOrbit-Prefix.pch";
@@ -1473,6 +1470,7 @@
 					"$(PROJECT_DIR)",
 					/Users/yoelusa/FacebookSDK,
 					"/Users/yoelusa/google-plus-ios-sdk-1.7.0",
+					/Users/yoelusa/Documents/FacebookSDK,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ZapOrbit/ZapOrbit-Prefix.pch";
