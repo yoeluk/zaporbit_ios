@@ -28,6 +28,8 @@
 
 + (id)initWithDelegate:(id)delegate;
 
++ (NSString *)baseApiUrl;
+
 -(void)WSRequest:(id)dictRequest
 				:(NSString *)service
 				:(NSString *)method;

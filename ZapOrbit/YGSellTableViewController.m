@@ -303,24 +303,26 @@
 			UIImage *image = [UIImage imageWithContentsOfFile:fullPathToImage];
 			CGRect rect;
 			CGImageRef imageRef;
-			if (image.size.width < image.size.height) {
-				rect = CGRectMake(0, (image.size.height - image.size.width)/2, image.size.width, image.size.width);
-				imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
-				image = [UIImage imageWithCGImage:imageRef];
-			} else {
-				rect = CGRectMake((image.size.width - image.size.height)/2, 0, image.size.height, image.size.height);
-				imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
-				image = [UIImage imageWithCGImage:imageRef];
-			}
-			[listing.icons setObject:image forKey:@"icon"];
-			CFRelease(imageRef);
-			dispatch_async(dispatch_get_main_queue(), ^{
-				NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.itemsForSale indexOfObject:listing] inSection:0];
-				UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-				if ([[self.tableView visibleCells] indexOfObject:cell] != NSNotFound) {
-					[(UIImageView *)[cell.contentView viewWithTag:10] setImage:image];
+			if (image != nil) {
+				if (image.size.width < image.size.height) {
+					rect = CGRectMake(0, (image.size.height - image.size.width)/2, image.size.width, image.size.width);
+					imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
+					image = [UIImage imageWithCGImage:imageRef];
+				} else {
+					rect = CGRectMake((image.size.width - image.size.height)/2, 0, image.size.height, image.size.height);
+					imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
+					image = [UIImage imageWithCGImage:imageRef];
 				}
-			});
+				[listing.icons setObject:image forKey:@"icon"];
+				CFRelease(imageRef);
+				dispatch_async(dispatch_get_main_queue(), ^{
+					NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.itemsForSale indexOfObject:listing] inSection:0];
+					UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+					if ([[self.tableView visibleCells] indexOfObject:cell] != NSNotFound) {
+						[(UIImageView *)[cell.contentView viewWithTag:10] setImage:image];
+					}
+				});
+			}
 		});
 	}
 }
@@ -434,7 +436,7 @@
     [FBGraphObject openGraphObjectForPostWithType:@"zaporbit:bargain"
                                             title:listing.title
                                             image:[NSString stringWithFormat:@"https://zaporbit.com/pictures/%@.jpg", (listing.pictureNames)[0]]
-											  url:nil
+											  url:[NSString stringWithFormat:@"https://zaporbit.com/#!/listing_item/%@", listing.id]
                                       description:listing.description];
 	
 	//object[@"image"] = @[@{@"url": [result objectForKey:@"uri"], @"user_generated" : @"false" }];

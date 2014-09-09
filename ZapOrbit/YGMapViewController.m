@@ -73,13 +73,14 @@ static int locationObservanceContext;
 }
 
 -(void)coughDirectionData:(NSDictionary *)json {
-	NSDictionary *routes = json[@"routes"][0];
-	
-	NSDictionary *route = routes[@"overview_polyline"];
-	NSString *overview_route = route[@"points"];
-	GMSPath *path = [GMSPath pathFromEncodedPath:overview_route];
-	GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
-	polyline.map = mapView_;
+	if (![json[@"status"]  isEqual: @"ZERO_RESULTS"]) {
+		NSDictionary *routes = json[@"routes"][0];
+		NSDictionary *route = routes[@"overview_polyline"];
+		NSString *overview_route = route[@"points"];
+		GMSPath *path = [GMSPath pathFromEncodedPath:overview_route];
+		GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
+		polyline.map = mapView_;
+	}
 }
 
 - (void)didReceiveMemoryWarning {

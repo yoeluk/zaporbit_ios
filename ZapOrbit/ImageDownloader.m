@@ -7,6 +7,7 @@
 
 #import "ImageDownloader.h"
 #import "ListingRecord.h"
+#import "YGWebService.h"
 
 //#define kAppIconSize 70
 
@@ -23,7 +24,8 @@
 - (void)startDownload {
 	if (self.listing.pictureNames.count && self.listing.pictureNames[0]) {
 		self.activeDownload = [NSMutableData data];
-		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://zaporbit.com/api/downloadpictures/%@", self.listing.pictureNames[0]]];
+		NSString *kBaseApiUrl = [YGWebService baseApiUrl];
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@downloadpictures/%@", kBaseApiUrl, self.listing.pictureNames[0]]];
 		NSURLRequest *request = [NSURLRequest requestWithURL:url];
 		
 		// alloc+init and start an NSURLConnection; release on completion/failure

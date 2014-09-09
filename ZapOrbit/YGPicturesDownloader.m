@@ -8,6 +8,7 @@
 
 #import "YGPicturesDownloader.h"
 #import "ListingRecord.h"
+#import "YGWebService.h"
 
 @interface YGPicturesDownloader ()
 @property (nonatomic, strong) NSMutableData *activeDownload;
@@ -30,7 +31,8 @@
 - (void)startDownload:(int)indx {
 	self.activeDownload = [NSMutableData data];
 	self.index = @(indx);
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"https://zaporbit.com/api/downloadpictures/%@", self.listing.pictureNames[(NSUInteger) indx]]];
+	NSString *kBaseApiUrl = [YGWebService baseApiUrl];
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat: @"%@downloadpictures/%@", kBaseApiUrl, self.listing.pictureNames[(NSUInteger) indx]]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     
     // alloc+init and start an NSURLConnection; release on completion/failure

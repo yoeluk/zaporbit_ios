@@ -10,7 +10,8 @@
 #import "ListingRecord.h"
 #import "RNEncryptor.h"
 
-static NSString *kUrlHead = @"https://zaporbit.com/api/";
+//static NSString *kUrlHead = @"https://zaporbit.com/api/";
+static NSString *kUrlHead = @"http://100.0.0.22:9000/api/";
 static NSString *password = @"bjmlBqAfiBEQ4oZfaGtI0oMcd5IGkCp";
 
 @implementation YGWebService
@@ -22,6 +23,10 @@ static NSString *password = @"bjmlBqAfiBEQ4oZfaGtI0oMcd5IGkCp";
 		//
     }
     return self;
+}
+
++ (NSString *)baseApiUrl {
+	return kUrlHead;
 }
 
 + (id)initWithDelegate:(id)delegate {

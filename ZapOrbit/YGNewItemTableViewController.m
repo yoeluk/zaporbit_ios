@@ -54,6 +54,7 @@
 	[currencyFormatter setLocale:[NSLocale currentLocale]];
 	
 	if (_listingUpdate) {
+		self.navigationItem.title = @"Listing";
 		if (_listing.pictureNames.count) {
 			[self downloadPicturesInListing:_listing index:0];
 		}
@@ -197,15 +198,17 @@
 -(void)postListing:(id)sender {
 	if ([userInfo user]) {
 		NSDictionary *postDict = @{
-                @"title" : _listing.title,
-                @"description" : _listing.description,
-                @"price" : _listing.price,
-                @"shop" : _listing.shop,
-                @"locale" : _listing.locale,
-                @"currency_code" : _listing.currency_code,
-                @"highlight" : @false,
-                @"waggle" : @false,
-                @"userid" : @(_listing.userid),
+				@"offer": @{
+					@"title" : _listing.title,
+					@"description" : _listing.description,
+					@"price" : _listing.price,
+					@"shop" : _listing.shop,
+					@"locale" : _listing.locale,
+					@"currency_code" : _listing.currency_code,
+					@"highlight" : [NSNumber numberWithBool:false],
+					@"waggle" : [NSNumber numberWithBool:false],
+					@"userid" : @(_listing.userid)
+				},
                 @"pictures" : _listing.pictureNames,
                 @"location" : _listing.location
         };
@@ -620,13 +623,13 @@
 			} else
 				[self postImages:nil];
 		} else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Current Location"] || [[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"OK"]) {
-			if (nil == locationManager) {
-				locationManager = [[CLLocationManager alloc] init];
-				locationManager.delegate = self;
-				locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+			if (nil == self->locationManager) {
+				self->locationManager = [[CLLocationManager alloc] init];
+				self->locationManager.delegate = self;
+				self->locationManager.desiredAccuracy = kCLLocationAccuracyBest;
 			}
 			self->postWithCurrentLocation = YES;
-			[locationManager startUpdatingLocation];
+			[self->locationManager startUpdatingLocation];
 			
 		}
 	}
@@ -659,7 +662,7 @@
 			self->postWithCurrentLocation = NO;
 		}
 		self->firstLocationUpdate = NO;
-		[self->locationManager stopUpdatingLocation];
+		[manager stopUpdatingLocation];
 	}
 }
 
@@ -696,21 +699,22 @@
 	dispatch_async(queue, ^{
 		NSString *fullPathToImage = (listing.pictures)[(NSUInteger) index];
 		UIImage *image = [UIImage imageWithContentsOfFile:fullPathToImage];
-		NSAssert(image != nil, @"the image found is could not be loaded from disk");
-		CGRect rect;
-		if (image.size.width < image.size.height) {
-			rect = CGRectMake(0, (image.size.height - image.size.width)/2, image.size.width, (CGFloat) (image.size.width/1.3));
-			CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
-			image = [UIImage imageWithCGImage:imageRef];
-			CFRelease(imageRef);
+		if (image != nil) {
+			CGRect rect;
+			if (image.size.width < image.size.height) {
+				rect = CGRectMake(0, (image.size.height - image.size.width)/2, image.size.width, (CGFloat) (image.size.width/1.3));
+				CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
+				image = [UIImage imageWithCGImage:imageRef];
+				CFRelease(imageRef);
+			}
+			[listing.picturesCache setObject:image forKey:(listing.pictureNames)[(NSUInteger) index]];
+			NSAssert([listing.picturesCache objectForKey:(listing.pictureNames)[index]] != nil, @"the image is not saved to the cache");
+			dispatch_async(dispatch_get_main_queue(), ^{
+				UICollectionViewCell *cell = [_carousel cellForItemAtIndexPath:indexPath];
+				[(UIImageView *)[cell.contentView viewWithTag:20] setImage:image];
+				[_carousel reloadSections:[NSIndexSet indexSetWithIndex:0]];
+			});
 		}
-        [listing.picturesCache setObject:image forKey:(listing.pictureNames)[(NSUInteger) index]];
-		NSAssert([listing.picturesCache objectForKey:(listing.pictureNames)[index]] != nil, @"the image is not saved to the cache");
-		dispatch_async(dispatch_get_main_queue(), ^{
-			UICollectionViewCell *cell = [_carousel cellForItemAtIndexPath:indexPath];
-			[(UIImageView *)[cell.contentView viewWithTag:20] setImage:image];
-			[_carousel reloadSections:[NSIndexSet indexSetWithIndex:0]];
-		});
 	});
 }
 

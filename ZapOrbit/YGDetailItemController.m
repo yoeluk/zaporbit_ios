@@ -90,8 +90,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 		UIImage *image = [UIImage imageWithContentsOfFile:fullPathToImage];
 		
 		UIActivityViewController *activityController = [[UIActivityViewController alloc]
-														initWithActivityItems:@[[NSString stringWithFormat:@"%@.", _listing.title],
-																				image]
+														initWithActivityItems:@[[NSString stringWithFormat:@"%@.", _listing.title], image]
 														applicationActivities:nil];
 		activityController.excludedActivityTypes = @[UIActivityTypePrint,
 													 UIActivityTypeCopyToPasteboard,
@@ -101,6 +100,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 	}
 }
 
+/*
 - (UIImage *)compressForUpload:(UIImage *)original scale:(CGFloat)scale {
     CGSize originalSize = original.size;
     CGSize newSize = CGSizeMake(originalSize.width * scale, originalSize.height * scale);
@@ -125,6 +125,7 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 	}
 	return image;
 }
+*/
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
 	return NO;
@@ -340,7 +341,6 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 					NSString *fullPathToImage = (_listing.pictures)[(NSUInteger) indexPath.row];
 					image = [UIImage imageWithContentsOfFile:fullPathToImage];
 					size = CGSizeMake(image.size.width*226/image.size.height, 226);
-					//NSLog(@"size {%f, %f", size.width, size.height);
 					dispatch_async(dispatch_get_main_queue(), ^{
 						UICollectionViewCell *updateCell = [collectionView cellForItemAtIndexPath:indexPath];
 						if (updateCell) {
@@ -535,10 +535,8 @@ static NSString *kApiUrl = @"http://zaporbit.com/api/";
 - (IBAction)purchaseItem:(id)sender {
 	//[self performSegueWithIdentifier:@"purchaseSegue" sender:self];
 	if ([_listing.user.isMerchant boolValue]) {
-		NSLog(@"this is a merchant");
 		NSString *urlString = [NSString stringWithFormat:@"https://zaporbit.com/cart/buyitem/%@", _listing.id];
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
-		NSLog(@"url = %@", urlString);
 	} else {
 		UIAlertView *purchaseAlert = [[UIAlertView alloc] initWithTitle:@"Start Puchasing?"
 																message:@"This action will initiate this purchasing by immediately contacting the seller and creating a buying record."

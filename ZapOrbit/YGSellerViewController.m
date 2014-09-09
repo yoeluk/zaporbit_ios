@@ -76,7 +76,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	UIImageView *picView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:picData]];
 	picView.contentMode = UIViewContentModeScaleAspectFill;
 	picView.tag = 55;
-	[picView setFrame:CGRectMake(-25, 15, 70, 70)];
+	[picView setFrame:CGRectMake(0, 0, 70, 70)];
 	[_ovalPicView addSubview:picView];
 }
 
@@ -152,15 +152,15 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 				if ([self->rating isEqual:[NSNull null]]) amountLabel.text = @"0";
 				else amountLabel.text = [NSString stringWithFormat:@"%ld", (long)[(self->rating)[@"total_ratings"] integerValue]];
 				[amountLabel sizeToFit];
-				CGRect rect = amountLabel.frame;
-				rect.size.height += 4;
-				rect.size.width += 12;
-				rect.origin.x = self.view.bounds.size.width-(rect.size.width+15);
-				amountLabel.frame = rect;
+				//CGRect rect = amountLabel.frame;
+				//rect.size.height += 4;
+				//rect.size.width += 12;
+				//rect.origin.x = self.view.bounds.size.width-(rect.size.width+15);
+				//amountLabel.frame = rect;
 				amountLabel.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1];
 				amountLabel.textColor = [UIColor whiteColor];
 				amountLabel.font = [UIFont boldSystemFontOfSize:14];
-				[amountLabel.layer setCornerRadius:10.f];
+				[amountLabel.layer setCornerRadius:12.f];
 			}
 			break;
 		case 1:

@@ -176,7 +176,7 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	zapUser.email = user[@"email"];
 	zapUser.name = user.first_name;
 	zapUser.surname = user.last_name;
-	zapUser.fbuserid = @(user.id.longLongValue);
+	zapUser.fbuserid = user.id;
 	
 	if (FBSession.activeSession.isOpen && (!zapUser.email || !zapUser.name || !zapUser.surname || !zapUser.fbuserid || [zapUser.email isEqualToString:@""])) {
         [FBSession.activeSession closeAndClearTokenInformation];

@@ -14,7 +14,7 @@
 @property (nonatomic, strong) UIImageView *profilePicView;
 
 @property (nonatomic) NSInteger id;
-@property (nonatomic) NSNumber *fbuserid;
+@property (nonatomic) NSString *fbuserid;
 @property (retain, nonatomic) NSString *name;
 @property (retain, nonatomic) NSString *fullName;
 @property (retain, nonatomic) NSString *middle_name;
