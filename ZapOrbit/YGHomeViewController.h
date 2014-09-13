@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import <FacebookSDK/FacebookSDK.h>
-#import <GooglePlus/GooglePlus.h>
 #import "YGWebService.h"
 #import "YGUserInfo.h"
 #import "YGOvalView.h"
@@ -18,7 +17,7 @@
 
 @class GPPSignInButton;
 
-@interface YGHomeViewController : UITableViewController <FBLoginViewDelegate, WebServiceDelegate, GPPSignInDelegate> {
+@interface YGHomeViewController : UITableViewController <FBLoginViewDelegate, WebServiceDelegate> {
 	YGUserInfo *userInfo;
 	AppSettings *appSetting;
 	YGRatingView *ratingView;
@@ -30,7 +29,6 @@
 
 @property (strong, nonatomic) UIButton *signOutButton;
 @property (strong, nonatomic) GPPSignInButton *signInButton;
-@property (strong, nonatomic) GPPSignIn *signIn;
 @property (strong, nonatomic) IBOutlet UIView *tableViewFooterView;
 
 @property (strong, nonatomic) IBOutlet UIView *tableViewHeaderView;

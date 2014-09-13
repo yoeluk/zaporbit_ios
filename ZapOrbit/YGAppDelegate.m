@@ -8,7 +8,6 @@
 
 #import "YGAppDelegate.h"
 #import <FacebookSDK/FacebookSDK.h>
-#import <GooglePlus/GooglePlus.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import "RNEncryptor.h"
 #import "AppSettings.h"
@@ -102,8 +101,8 @@
 	
 	// You can add your app-specific url handling code here if needed
 	BOOL wasHandledByZO = [[url scheme] isEqualToString:@"zaporbit"];
-	BOOL wasHandledByG = [GPPURLHandler handleURL:url sourceApplication:sourceApplication annotation:annotation];
-	return wasHandledByFB || wasHandledByG || wasHandledByZO;
+	
+	return wasHandledByFB || wasHandledByZO;
 }
 
 -(void)saveSettings:(id)sender {

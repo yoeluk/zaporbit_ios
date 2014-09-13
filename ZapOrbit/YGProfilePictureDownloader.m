@@ -12,7 +12,7 @@
 
 #pragma mark
 
-- (void)startDownload:(NSNumber *)fbuserid {
+- (void)startDownload:(NSString *)fbuserid {
 	//self.index = [NSNumber numberWithInt:indx];
     self.activeDownload = [NSMutableData data];
 	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", fbuserid]];

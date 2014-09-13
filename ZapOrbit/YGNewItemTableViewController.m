@@ -254,6 +254,7 @@
 -(void)upgradeLinsting:(NSNumber *)listingid isWaggle:(bool)waggle isHighlight:(bool)highlight {
 	self->isUpgrading = YES;
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://zaporbit.com/cart/upgradelisting/%@/%d/%d", listingid, waggle, highlight]]];
+	//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://100.0.0.22:9000/cart/upgradelisting/%@/%d/%d", listingid, waggle, highlight]]];
 }
 
 -(void)prepareForPosting:(id)sender {
@@ -267,12 +268,20 @@
 }
 
 -(void) getPicture:(id)sender {
-	[self startCameraControllerFromViewController:self usingDelegate:(self)];
+	
+	UIActionSheet *deleteSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open camera", @"Upload from library", nil];
+	deleteSheet.tag = 1001;
+	[deleteSheet showInView:self.tableView];
+}
+
+-(void) startPicker: (NSString *)source {
+	[self startCameraControllerFromViewController:self usingDelegate:(self) fromSource: source];
 }
 
 - (BOOL) startCameraControllerFromViewController: (UIViewController*) controller
 								   usingDelegate: (id <UIImagePickerControllerDelegate,
-												   UINavigationControllerDelegate>) delegate {
+												   UINavigationControllerDelegate>) delegate
+									  fromSource: (NSString *) source {
 
     if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]
 		|| (delegate == nil)
@@ -280,14 +289,24 @@
         return NO;
 	
     UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
-    cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
 	
-    cameraUI.mediaTypes =
-	[UIImagePickerController availableMediaTypesForSourceType:
-	UIImagePickerControllerSourceTypeCamera];
+	if ([source isEqualToString:@"camera"]) {
+		cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
+	}
+	
+	
+    //cameraUI.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType: UIImagePickerControllerSourceTypeCamera];
 	
     cameraUI.allowsEditing = NO;
     cameraUI.delegate = delegate;
+	
+	//For iphone 5+
+	//Camera is 426 * 320. Screen height is 568.  Multiply by 1.333 in 5 inch to fill vertical
+//	CGAffineTransform translate = CGAffineTransformMakeTranslation(0.0, 71.0); //This slots the preview exactly in the middle of the screen by moving it down 71 points
+//	cameraUI.cameraViewTransform = translate;
+//	
+//	CGAffineTransform scale = CGAffineTransformScale(translate, 1.333333, 1.333333);
+//	cameraUI.cameraViewTransform = scale;
 	
     [controller presentViewController:cameraUI animated:(YES) completion:^{
 		
@@ -596,11 +615,11 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	NSInteger index = actionSheet.tag;
-	if (buttonIndex == 0 && index != 999) {
+	if (buttonIndex == 0 && index != 999 && index != 1001) {
 		if (index <= _listing.pictureNames.count-1 ) {
 			if (_listingUpdate) {
 				YGWebService *ws = [YGWebService initWithDelegate:self];
-				[ws deletePicture:[NSString stringWithFormat:@"deletepicture/%@/%@", _listing.id, (_listing.pictureNames)[(NSUInteger) index]] :index :@"GET"];
+				[ws deletePicture:[NSString stringWithFormat:@"deletepicture/%@/%@", _listing.id, (_listing.pictureNames)[(NSUInteger) index]] :(int)index :@"GET"];
 			} else {
                 [_listing.pictureNames removeObjectAtIndex:(NSUInteger) index];
                 [_listing.pictures removeObjectAtIndex:(NSUInteger) index];
@@ -613,6 +632,13 @@
             [_listing.pictureNames removeObjectAtIndex:(NSUInteger) index];
 			[_carousel reloadSections:[NSIndexSet indexSetWithIndex:0]];
 		}
+	} else if (index == 1001) {
+		if (buttonIndex == 0) {
+			[self startPicker:@"camera"];
+		} else if (buttonIndex == 1) {
+			[self startPicker:@"library"];
+		}
+		
 	} else {
 		if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Saved Location"]) {
 			_listing.location = [ZOLocation dictionaryWithLocation:self.appSettings.defaultLocation];

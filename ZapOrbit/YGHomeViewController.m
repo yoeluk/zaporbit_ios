@@ -49,36 +49,7 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	
 	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStylePlain target:nil action:nil];
 	
-	_signOutButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	UIImage *originalImage = [UIImage imageNamed:@"gpp_sign_in_dark_button_normal.png"];
-	UIEdgeInsets insets = UIEdgeInsetsMake(10, 45, 10, 45);
-	UIImage *stretchableImage = [originalImage resizableImageWithCapInsets:insets];
-	[_signOutButton setBackgroundImage:stretchableImage forState:UIControlStateNormal];
-	CGRect rect = CGRectMake(_signInButton.frame.origin.x, _signInButton.frame.origin.y, _signInButton.frame.size.width, _signInButton.frame.size.height);
-	_signOutButton.frame = rect;
-	[_signOutButton setTitle:@"Sign out" forState:UIControlStateNormal];
-	_signOutButton.titleLabel.font = [UIFont fontWithName:@"Roboto-Bold" size:14];
-	[_signOutButton setTintColor:[UIColor whiteColor]];
-	[_signOutButton addTarget:self action:@selector(googleSignOut:) forControlEvents:UIControlEventTouchUpInside];
-	
-	//[self.tableViewFooterView addSubview:_signOutButton];
-	//[_signOutButton setHidden:YES];
-	
-	_signIn = [GPPSignIn sharedInstance];
-	_signIn.shouldFetchGooglePlusUser = YES;
-	_signIn.shouldFetchGoogleUserID = YES;
-	_signIn.shouldFetchGoogleUserEmail = YES;
-	_signIn.clientID = kGoogleClientId;
-	//_signIn.scopes = @[kGTLAuthScopePlusLogin];
-	_signIn.scopes = @[@"profile"];
-	_signIn.delegate = self;
-	
-	//[_signIn trySilentAuthentication];
-	
 	self.records = [[NSMutableDictionary alloc] init];
-	
-	//UIImage *tabImageSelected = [UIImage imageNamed:@"750-home-selected"];
-	//[self.navigationController.tabBarItem setSelectedImage:tabImageSelected];
 	
 	self.progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, -2, self.tableView.frame.size.width, 2)];
 	self.progressView.tag = 15;
@@ -86,6 +57,8 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	self.progressView.progress = 0.0f;
 	
 	[self.tableView addSubview:self.progressView];
+	
+	CGRect rect = CGRectZero;
 	
 	self.statusLabel.hidden = YES;
 	rect = CGRectMake(105, 39, 150, 50);
@@ -100,67 +73,6 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-- (void)finishedWithAuth:(GTMOAuth2Authentication *)auth
-                   error:(NSError *) error {
-	NSLog(@"Received error %@ and auth object %@",error, auth);
-	if (error) {
-		// Do some error handling here.
-	} else {
-		[self refreshInterfaceBasedOnSignIn];
-		//NSLog(@"%@", _signIn.authentication.userEmail);
-		//NSLog(@"%@", _signIn.userID);
-		//NSLog(@"%@", _signIn.googlePlusUser.image.url);
-		//[self getCircles];
-	}
-}
-
--(void)getCircles {
-	GTLServicePlus* plusService = [[GTLServicePlus alloc] init];
-	plusService.retryEnabled = YES;
-	
-	[plusService setAuthorizer:[GPPSignIn sharedInstance].authentication];
-	
-	GTLQueryPlus *query = [GTLQueryPlus queryForPeopleListWithUserId:@"me"
-														  collection:kGTLPlusCollectionVisible];
-	[plusService executeQuery:query
-			completionHandler:^(GTLServiceTicket *ticket,
-								GTLPlusPeopleFeed *peopleFeed,
-								NSError *error) {
-				if (error) {
-					GTMLoggerError(@"Error: %@", error);
-				} else {
-					// Get an array of people from GTLPlusPeopleFeed
-					NSLog(@"%@", peopleFeed.items);
-					for (GTLPlusPerson *person in peopleFeed.items) {
-						NSLog(@"%@", person.image.url);
-					}
-				}
-			}];
-}
-
--(void)refreshInterfaceBasedOnSignIn {
-	if ([[GPPSignIn sharedInstance] authentication]) {
-		// The user is signed in.
-		self.signInButton.hidden = YES;
-		self.signOutButton.hidden = NO;
-		
-	} else {
-		self.signOutButton.hidden = YES;
-		self.signInButton.hidden = NO;
-	}
-}
-
-- (void)googleSignOut:(id)sender {
-	[[GPPSignIn sharedInstance] signOut];
-	self.signOutButton.hidden = YES;
-	self.signInButton.hidden = NO;
-}
-
-- (void)disconnectGoogle {
-	[[GPPSignIn sharedInstance] disconnect];
-}
-
 - (void)didDisconnectWithError:(NSError *)error {
 	if (error) {
 		NSLog(@"Received error %@", error);
@@ -191,16 +103,11 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 			}
 		}
 		[userInfo setUser:zapUser];
-		//self.fbLoginView.hidden = YES;
 		[self verifyFbLogin:nil];
 	}
 }
 
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
-	
-	//self->ratingView = [[YGRatingView alloc] initWithFrame:rect];
-	//self->ratingView.tag = 50;
-	//[self.statusLabel.superview addSubview:self->ratingView];
 	[self.loginButton setTitle:@"Log out"];
 }
 
@@ -210,8 +117,6 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	self.nameLabel.text = @"You're logged out";
 	[self->ratingView setRating:1 animated:YES];
 	[self->ratingView setRatingText:@"~ Level ~"];
-	//self.statusLabel.hidden = NO;
-	//self.statusLabel.text= @"You're not logged in!";
 	[userInfo setUser:nil];
 	[self.loginButton setTitle:@"Login"];
 }

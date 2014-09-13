@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		290B8022197FE58800029702 /* GooglePlus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 290B8021197FE58800029702 /* GooglePlus.framework */; };
 		290B8024197FE58C00029702 /* GoogleOpenSource.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 290B8023197FE58C00029702 /* GoogleOpenSource.framework */; };
 		2925BC2918E0430C008060D4 /* YGOvalView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2925BC2818E0430C008060D4 /* YGOvalView.m */; };
 		2925BC2B18E1B446008060D4 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2925BC2A18E1B446008060D4 /* AddressBook.framework */; };
@@ -84,8 +83,6 @@
 		296FA3B318E4B5F900711E13 /* ios7_sent.png in Resources */ = {isa = PBXBuildFile; fileRef = 296FA3B218E4B5F900711E13 /* ios7_sent.png */; };
 		296FA3B518E4B8D900711E13 /* ios7_bin.png in Resources */ = {isa = PBXBuildFile; fileRef = 296FA3B418E4B8D900711E13 /* ios7_bin.png */; };
 		296FA3B718E4C8A200711E13 /* ios7_key.png in Resources */ = {isa = PBXBuildFile; fileRef = 296FA3B618E4C8A200711E13 /* ios7_key.png */; };
-		296FA3BA18E4E2BF00711E13 /* gpp_sign_in_dark_button_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 296FA3B818E4E2BF00711E13 /* gpp_sign_in_dark_button_normal.png */; };
-		296FA3BB18E4E2BF00711E13 /* gpp_sign_in_dark_button_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 296FA3B918E4E2BF00711E13 /* gpp_sign_in_dark_button_normal@2x.png */; };
 		296FA3BE18E4E6B500711E13 /* YGLoginOptionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 296FA3BD18E4E6B500711E13 /* YGLoginOptionsController.m */; };
 		296FA3C218E4FDC900711E13 /* ios7_friends.png in Resources */ = {isa = PBXBuildFile; fileRef = 296FA3C118E4FDC900711E13 /* ios7_friends.png */; };
 		296FA3E118E593D600711E13 /* ios7_many_friends@x2.png in Resources */ = {isa = PBXBuildFile; fileRef = 296FA3DF18E593D600711E13 /* ios7_many_friends@x2.png */; };
@@ -172,7 +169,6 @@
 		29A9B078190AF0940071F8AA /* YGScrollViewCopiable.m in Sources */ = {isa = PBXBuildFile; fileRef = 29A9B077190AF0940071F8AA /* YGScrollViewCopiable.m */; };
 		29A9B083190B44390071F8AA /* YGInboxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29A9B082190B44390071F8AA /* YGInboxViewController.m */; };
 		29A9B086190C20A10071F8AA /* YGComposerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29A9B085190C20A10071F8AA /* YGComposerViewController.m */; };
-		29C5DBAC18E3A281001B3774 /* GooglePlus.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 29C5DBAB18E3A281001B3774 /* GooglePlus.bundle */; };
 		29C970901919C24300B74566 /* YGTileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 29C9708F1919C24300B74566 /* YGTileView.m */; };
 		29E81E5618FD5C9D00F8B611 /* YGRecordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 29E81E5518FD5C9D00F8B611 /* YGRecordsViewController.m */; };
 		29E81E641903E36800F8B611 /* 762-shopping-bag-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 29E81E621903E36800F8B611 /* 762-shopping-bag-selected.png */; };
@@ -271,7 +267,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		290B8021197FE58800029702 /* GooglePlus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GooglePlus.framework; path = "../../../../google-plus-ios-sdk-1.7.0/GooglePlus.framework"; sourceTree = "<group>"; };
 		290B8023197FE58C00029702 /* GoogleOpenSource.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleOpenSource.framework; path = "../../../../google-plus-ios-sdk-1.7.0/GoogleOpenSource.framework"; sourceTree = "<group>"; };
 		2925BC2718E0430C008060D4 /* YGOvalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGOvalView.h; sourceTree = "<group>"; };
 		2925BC2818E0430C008060D4 /* YGOvalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGOvalView.m; sourceTree = "<group>"; };
@@ -486,7 +481,6 @@
 		29A9B082190B44390071F8AA /* YGInboxViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGInboxViewController.m; sourceTree = "<group>"; };
 		29A9B084190C20A10071F8AA /* YGComposerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGComposerViewController.h; sourceTree = "<group>"; };
 		29A9B085190C20A10071F8AA /* YGComposerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGComposerViewController.m; sourceTree = "<group>"; };
-		29C5DBAB18E3A281001B3774 /* GooglePlus.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GooglePlus.bundle; sourceTree = "<group>"; };
 		29C9708E1919C24300B74566 /* YGTileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGTileView.h; sourceTree = "<group>"; };
 		29C9708F1919C24300B74566 /* YGTileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGTileView.m; sourceTree = "<group>"; };
 		29E81E5418FD5C9D00F8B611 /* YGRecordsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGRecordsViewController.h; sourceTree = "<group>"; };
@@ -549,7 +543,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				290B8024197FE58C00029702 /* GoogleOpenSource.framework in Frameworks */,
-				290B8022197FE58800029702 /* GooglePlus.framework in Frameworks */,
 				296FA45118E8825F00711E13 /* QuartzCore.framework in Frameworks */,
 				296FA44F18E8823F00711E13 /* OpenGLES.framework in Frameworks */,
 				296FA44D18E8823100711E13 /* libz.dylib in Frameworks */,
@@ -693,7 +686,6 @@
 				299CB94518F5EDC700273572 /* DPMeter */,
 				2994B44918F45FBF007B2375 /* BarCodeKit */,
 				296FA45C18EAEA2100711E13 /* RNCryptor */,
-				29C5DBAB18E3A281001B3774 /* GooglePlus.bundle */,
 				296FA43E18E8818A00711E13 /* GoogleMaps.bundle */,
 				2996C7A618D4648400873252 /* Images */,
 				2996C76418D3895D00873252 /* ZapOrbit */,
@@ -718,7 +710,6 @@
 			children = (
 				297D9ACE19B113CF00FC5B37 /* FacebookSDK.framework */,
 				290B8023197FE58C00029702 /* GoogleOpenSource.framework */,
-				290B8021197FE58800029702 /* GooglePlus.framework */,
 				296FA45018E8825F00711E13 /* QuartzCore.framework */,
 				296FA44E18E8823F00711E13 /* OpenGLES.framework */,
 				296FA44C18E8823100711E13 /* libz.dylib */,
@@ -1175,7 +1166,6 @@
 				2948AC6218F8BAE100DC7735 /* 808-documents.png in Resources */,
 				29E81E7119042FBB00F8B611 /* 740-gear-selected@2x.png in Resources */,
 				299EB4D6191DF834006A161B /* 712-reply@2x.png in Resources */,
-				29C5DBAC18E3A281001B3774 /* GooglePlus.bundle in Resources */,
 				29E81E7019042FBB00F8B611 /* 740-gear-selected.png in Resources */,
 				2929FDAE1911AFD300CF2D1B /* profile-placeholder2.png in Resources */,
 				2948AC5E18F8BA1400DC7735 /* 810-document-2.png in Resources */,
@@ -1188,7 +1178,6 @@
 				292D96BB194F5257008BA8F5 /* 744-locked.png in Resources */,
 				2938C54218EFCC29002288AB /* 735-phone.png in Resources */,
 				2938C54418EFCC31002288AB /* 735-phone@2x.png in Resources */,
-				296FA3BB18E4E2BF00711E13 /* gpp_sign_in_dark_button_normal@2x.png in Resources */,
 				296FA40118E5A0BF00711E13 /* 740-gear@2x.png in Resources */,
 				2948AC5718F8B5B100DC7735 /* 899-key@2x.png in Resources */,
 				299CB94318F56CD200273572 /* dollar3.png in Resources */,
@@ -1210,7 +1199,6 @@
 				296FA3E118E593D600711E13 /* ios7_many_friends@x2.png in Resources */,
 				296FA40918E5A23600711E13 /* 876-store@2x.png in Resources */,
 				2938C53C18EFC7C0002288AB /* 730-envelope.png in Resources */,
-				296FA3BA18E4E2BF00711E13 /* gpp_sign_in_dark_button_normal.png in Resources */,
 				299EB4DD19212D9A006A161B /* 754-scale.png in Resources */,
 				296FA3B318E4B5F900711E13 /* ios7_sent.png in Resources */,
 				299CB92918F546AD00273572 /* Roboto-Bold.ttf in Resources */,

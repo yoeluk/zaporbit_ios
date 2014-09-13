@@ -57,7 +57,7 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
     [FBRequestConnection startForMyFriendsWithCompletionHandler:^(FBRequestConnection *connection, id response, NSError *error) {
         NSMutableArray *friends = [NSMutableArray new];
         if (!error) {
-            [friends addObjectsFromArray:[response data]];
+            [friends addObjectsFromArray:(NSArray *)[response data]];
         }
         callback(friends);
     }];

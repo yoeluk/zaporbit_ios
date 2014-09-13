@@ -17,7 +17,7 @@
 @property (nonatomic, strong) UIView *profilePictureSuperView;
 @property (nonatomic, copy) void (^completionHandler)(void);
 
-- (void)startDownload:(NSNumber *)fbuserid;
+- (void)startDownload:(NSString *)fbuserid;
 - (void)cancelDownload;
 
 @property (nonatomic, strong) NSMutableData *activeDownload;
