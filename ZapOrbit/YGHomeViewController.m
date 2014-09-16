@@ -118,7 +118,7 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	[self->ratingView setRating:1 animated:YES];
 	[self->ratingView setRatingText:@"~ Level ~"];
 	[userInfo setUser:nil];
-	[self.loginButton setTitle:@"Login"];
+	[self.loginButton setTitle:@"Log in"];
 }
 
 -(void)verifyFbLogin:(id)sender {
@@ -327,7 +327,7 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 				cell.textLabel.text = @"";
 				cell.detailTextLabel.text = @"";
 			} else if (indexPath.row == 1) {
-				cell.textLabel.text = @"Login Options";
+				cell.textLabel.text = @"Log in options";
 				cell.detailTextLabel.text = @"";
 				cell.textLabel.font = [UIFont systemFontOfSize:15];
 				cell.textLabel.textColor = [UIColor grayColor];

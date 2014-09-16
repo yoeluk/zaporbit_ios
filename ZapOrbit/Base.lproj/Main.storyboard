@@ -2546,7 +2546,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="ZapOrbit" id="vp0-rA-tLD">
-                        <barButtonItem key="rightBarButtonItem" title="Login" id="1uB-m6-o9A">
+                        <barButtonItem key="rightBarButtonItem" title="Log in" id="1uB-m6-o9A">
                             <connections>
                                 <action selector="loginAction:forEvent:" destination="RHn-5g-ovZ" id="bF3-GA-zWr"/>
                             </connections>
