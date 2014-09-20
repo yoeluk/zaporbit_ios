@@ -96,27 +96,29 @@
     NSURLSessionDataTask *meSession = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]]
 									   dataTaskWithURL:picUserURL
 									   completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if ([(NSHTTPURLResponse *) response statusCode] == 200 && data) {
-            self->uPicImage = (YGImage *) [UIImage imageWithData:data];
-        }
-        if (self->mePicImage == nil) {
-            NSURL *picMeURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", self.me.fbuserid]];
-            NSURLSessionDataTask *uSession = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]]
-											  dataTaskWithURL:picMeURL
-											  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                if ([(NSHTTPURLResponse *) response statusCode] == 200 && data) {
-                    self->mePicImage = (YGImage *) [UIImage imageWithData:data];
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.collectionView reloadData];
-                });
-            }];
-            [uSession resume];
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.collectionView reloadData];
-            });
-        }
+		if (nil == error) {
+			if ([(NSHTTPURLResponse *) response statusCode] == 200 && data) {
+				self->uPicImage = (YGImage *) [UIImage imageWithData:data];
+			}
+			if (self->mePicImage == nil) {
+				NSURL *picMeURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large", self.me.fbuserid]];
+				NSURLSessionDataTask *uSession = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]]
+												  dataTaskWithURL:picMeURL
+												  completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+					if ([(NSHTTPURLResponse *) response statusCode] == 200 && data) {
+						self->mePicImage = (YGImage *) [UIImage imageWithData:data];
+					}
+					dispatch_async(dispatch_get_main_queue(), ^{
+						[self.collectionView reloadData];
+					});
+				}];
+				[uSession resume];
+			} else {
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[self.collectionView reloadData];
+				});
+			}
+		} else NSLog(@"%@", error.description);
     }];
     [meSession resume];
 }
@@ -195,9 +197,14 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.messages.count;
 }
+- (CGSize)collectionView:(UICollectionView *)collectionView
+				  layout:(UICollectionViewLayout *)collectionViewLayout
+referenceSizeForHeaderInSection:(NSInteger)section {
+	return CGSizeMake(self.view.bounds.size.width, 54);
+}
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    static NSString *headerIdentifier = @"collectionViewHeader";
+	static NSString *headerIdentifier = @"collectionViewHeader";
     UICollectionReusableView *collectionViewHeather;
     collectionViewHeather = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
     UICollectionViewLayoutAttributes *attrs = [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:kind withIndexPath:indexPath];
@@ -239,8 +246,6 @@
             messageView = (UITextView *) [cell.contentView viewWithTag:45];
             messageView.layoutManager.delegate = self;
             messageView.text = [NSString stringWithFormat:@"\u00BB %@", message[@"message"]];
-            //messageSize = CGSizeMake(messageView.bounds.size.width, [[self->messagesHeights objectAtIndex:self.messages.count-indexPath.row-1] floatValue]);
-            //[messageView setContentSize:messageSize];
 
             if ([message[@"senderid"] longLongValue] == self.me.id) {
                 if (self->mePicImage) {

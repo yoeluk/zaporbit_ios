@@ -10,23 +10,35 @@
 #import "ListingRecord.h"
 #import "RNEncryptor.h"
 
-//static NSString *kUrlHead = @"https://zaporbit.com/api/";
-static NSString *kUrlHead = @"http://100.0.0.22:9000/api/";
+//static NSString *baseUrl = @"https://zaporbit.com/";
+static NSString *baseUrl = @"http://100.0.0.22:9000/";
+
+static NSMutableDictionary *tokenData;
+
 static NSString *password = @"bjmlBqAfiBEQ4oZfaGtI0oMcd5IGkCp";
 
 @implementation YGWebService
 @synthesize delegate;
+@synthesize kUrlHead;
 
 - (id)init {
     self = [super init];
     if (self) {
-		//
+		kUrlHead = [NSString stringWithFormat:@"%@%@", baseUrl, @"api/"];
     }
     return self;
 }
 
++ (NSDictionary *)tokenData {
+	return tokenData;
+}
+
++ (void)setTokenData:(NSDictionary *)data {
+	tokenData = [NSMutableDictionary dictionaryWithDictionary:data];
+}
+
 + (NSString *)baseApiUrl {
-	return kUrlHead;
+	return [NSString stringWithFormat:@"%@%@", baseUrl, @"api/"];;
 }
 
 + (id)initWithDelegate:(id)delegate {
@@ -138,6 +150,7 @@ static NSString *password = @"bjmlBqAfiBEQ4oZfaGtI0oMcd5IGkCp";
 	[request setHTTPMethod:method];
 	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
 	[request setValue:@"application/json" forHTTPHeaderField:@"content-type"];
+	[request setValue:tokenData[@"token"] forHTTPHeaderField:@"X-Auth-Token"];
 	[request setHTTPBody:jsonData];
 	
 	[NSURLConnection sendAsynchronousRequest:request
@@ -151,34 +164,35 @@ static NSString *password = @"bjmlBqAfiBEQ4oZfaGtI0oMcd5IGkCp";
 	
 }
 
--(void)verifyUser:(NSDictionary *)dictRequest
-				 :(NSString *)service
-				 :(NSString *)method {
+-(void)verifyUser:(NSDictionary *)fbTokenData {
 	
-	NSString *tick = [self getTick];
 	NSError *RequestError = nil;
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictRequest options:0 error:&RequestError];
-	NSData *encryptedJsonData = [self encryptMyBody:jsonData withPassword:password andTick:tick];
-	NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[encryptedJsonData length]];
-	NSString *urlString = [NSString stringWithFormat:@"%@%@/%@", kUrlHead, service, tick];
+	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:fbTokenData options:0 error:&RequestError];
+	NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[jsonData length]];
+	NSString *urlString = [NSString stringWithFormat:@"%@%@", baseUrl, @"auth/api/authenticate/facebook"];
 	NSURL *serverURL = [NSURL URLWithString:urlString];
 	[request setURL:serverURL];
-	[request setHTTPMethod:method];
+	[request setHTTPMethod:@"POST"];
 	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-	[request setValue:@"application/json" forHTTPHeaderField:@"content-type"];
-	[request setHTTPBody:encryptedJsonData];
-	
-	//NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[request setHTTPBody:jsonData];
 	
 	[NSURLConnection sendAsynchronousRequest:request
 									   queue:[NSOperationQueue mainQueue]
 						   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
 							   if ([data length] > 0 && error == nil) {
-								   [self.delegate verifyingUserResponse:data];
+								   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+								   //[self.delegate verifyingUserResponse:data];
+								   NSDictionary *json = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+								   if (json && [httpResponse statusCode] == 200) {
+									   [YGWebService setTokenData:json];
+									   [self getCurrentUser];
+								   }
 							   }
 							   else if (error) NSLog(@"received error: %@", error);
 							   else if (data == nil) NSLog(@"data is nil from %@ ", [response URL]);
+							   else NSLog(@"unknow error");
 						   }];
 	/*
 	NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -194,6 +208,32 @@ static NSString *password = @"bjmlBqAfiBEQ4oZfaGtI0oMcd5IGkCp";
 													  }];
 	[session resume];
 	*/
+}
+
+- (void)getCurrentUser {
+	
+	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+	NSString *urlString = [NSString stringWithFormat:@"%@%@", kUrlHead, @"currentUser"];
+	NSURL *serverURL = [NSURL URLWithString:urlString];
+	[request setURL:serverURL];
+	[request setHTTPMethod:@"GET"];
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[request setValue:tokenData[@"token"] forHTTPHeaderField:@"X-Auth-Token"];
+	
+	[NSURLConnection sendAsynchronousRequest:request
+									   queue:[NSOperationQueue mainQueue]
+						   completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+							   if ([data length] > 0 && error == nil) {
+								   NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+								   //[self.delegate verifyingUserResponse:data];
+								   if ([httpResponse statusCode] == 200) {
+									   [self.delegate verifyingUserResponse:data];
+								   }
+							   }
+							   else if (error) NSLog(@"received error: %@", error);
+							   else if (data == nil) NSLog(@"data is nil from %@ ", [response URL]);
+							   else NSLog(@"unknow error");
+						   }];
 }
 
 -(void)deletePicture:(NSString *)service

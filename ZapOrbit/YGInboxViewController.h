@@ -18,6 +18,7 @@
 	CATransition *textTransition;
 	AppSettings *appSettings;
 	NSTimer *updateInfoTimer;
+	NSString *kUrlHead;
 }
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;

@@ -104,7 +104,7 @@
 		[self->progressView setHidden:NO];
 		[self->progressView setProgress:0.4 animated:YES];
 		
-		NSDictionary *messageDict = @{@"received_status" : @"unread", @"senderid" : @(self.me.id), @"recipientid" : @(self.toUser.id), @"convid" : self->convid, @"message" : self->message};
+		NSDictionary *messageDict = @{@"recipientid" : @(self.toUser.id), @"convid" : self->convid, @"message" : self->message};
 		YGWebService *ws = [YGWebService initWithDelegate:self];
 		[ws startConversation:messageDict
 				  withService:@"replytoconvo"

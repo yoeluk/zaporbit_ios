@@ -26,6 +26,12 @@
 @property (nonatomic, strong) YGDataDelegate *dataDelegate;
 @property (nonatomic, weak) id <WebServiceDelegate> delegate;
 
+@property (nonatomic, strong) NSString *kUrlHead;
+
++ (NSDictionary *)tokenData;
+
++ (void)setTokenData:(NSDictionary *)data;
+
 + (id)initWithDelegate:(id)delegate;
 
 + (NSString *)baseApiUrl;
@@ -47,9 +53,7 @@
 -(void)deletePicture:(NSString *)service
 					:(int)index
 					:(NSString *)method;
--(void)verifyUser:(NSDictionary *)dictRequest
-				 :(NSString *)service
-				 :(NSString *)method;
+-(void)verifyUser:(NSDictionary *)tokenData;
 -(void)uploadMorePictures:(id)data
 						 :(NSString *)service
 						 :(NSString *)method;

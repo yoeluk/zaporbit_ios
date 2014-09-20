@@ -9,8 +9,6 @@
 #import "YGInboxViewController.h"
 #import "YGConvoCollectionViewController.h"
 
-static NSString *kUrlHead = @"https://zaporbit.com/api/";
-
 @interface YGInboxViewController ()
 
 @end
@@ -27,6 +25,8 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
     // Do any additional setup after loading the view.
 	
 	userInfo = [YGUserInfo sharedInstance];
+	
+	self->kUrlHead = [YGWebService baseApiUrl];
 	
 	self->appSettings = [(YGAppDelegate *)[[UIApplication sharedApplication] delegate] appSettings];
 	

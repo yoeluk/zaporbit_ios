@@ -21,6 +21,7 @@
 	YGUserInfo *userInfo;
 	AppSettings *appSetting;
 	YGRatingView *ratingView;
+	NSString *kUrlHead;
 }
 
 @property (strong, nonatomic) IBOutlet YGOvalView *ovalPicView;

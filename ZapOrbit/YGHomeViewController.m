@@ -10,8 +10,7 @@
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import "YGInboxViewController.h"
 
-static NSString * const kGoogleClientId = @"252408930349-1otbutcank3df2grgcav7djt4o7c6trc.apps.googleusercontent.com";
-static NSString *kUrlHead = @"https://zaporbit.com/api/";
+static NSString *const kGoogleClientId = @"252408930349-1otbutcank3df2grgcav7djt4o7c6trc.apps.googleusercontent.com";
 
 @interface YGHomeViewController ()
 
@@ -67,6 +66,7 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 	[self.statusLabel.superview addSubview:self->ratingView];
 	self.nameLabel.text = @"You're logged out";
 	
+	self->kUrlHead = [YGWebService baseApiUrl];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -123,13 +123,17 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 
 -(void)verifyFbLogin:(id)sender {
 	if (!userInfo.isLoggedIn && !userInfo.isProcessingLogin) {
+		int expiresIn = [[[[FBSession activeSession] accessTokenData] expirationDate] timeIntervalSinceDate:[NSDate date]];
+		NSDictionary *tokenData = @{
+									@"email":userInfo.user.email,
+									@"info": @{
+										@"accessToken":[[[FBSession activeSession] accessTokenData] accessToken],
+										@"expiresIn":[NSNumber numberWithInt:expiresIn]
+									}};
 		[userInfo setIsProcessingLogin:YES];
-		NSMutableDictionary *userDictionary = [@{@"name" : userInfo.user.name,
-                @"surname" : userInfo.user.surname,
-                @"fbuserid" : userInfo.user.fbuserid,
-                @"email" : userInfo.user.email} mutableCopy];
 		YGWebService *ws = [YGWebService initWithDelegate:self];
-		[ws verifyUser:userDictionary :@"verifyinguser" :@"POST"];
+		
+		[ws verifyUser:tokenData];
 	}
 }
 
@@ -193,8 +197,11 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 -(void)getUsersRecords:(int)page {
 	[self.progressView setHidden:NO];
 	[self.progressView setProgress:0.4 animated:YES];
-	NSURL *buyingURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@getrecords/%ld/%d", kUrlHead, (long)userInfo.user.id, page]];
-	NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:buyingURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+	NSURL *recordsURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@getrecords/%d", kUrlHead, page]];
+	NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+	NSString *token = [YGWebService tokenData][@"token"];
+	sessionConfig.HTTPAdditionalHeaders = @{@"X-Auth-Token": token};
+	NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:sessionConfig] dataTaskWithURL:recordsURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 		if (data) {
 			NSMutableDictionary *dataObj = (NSMutableDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
 			if (dataObj && [dataObj[@"status"] isEqualToString:@"OK"]) {
@@ -207,8 +214,9 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 					(self.records)[@"sellingRecords"] = [self recordsWithArray:selling_records];
 				}
 				if (dataObj[@"billing_records"]) {
-					id billing_records = dataObj[@"billing_records"];
-					(self.records)[@"billingRecords"] = [self recordsWithArray:billing_records];
+#warning gotta come back here and sort out billing_records
+//					id billing_records = dataObj[@"billing_records"];
+//					(self.records)[@"billingRecords"] = [self recordsWithArray:billing_records];
 				}
 				if (dataObj[@"messages_records"]) {
                     (self.records)[@"inboxRecords"] = dataObj[@"messages_records"];
@@ -343,11 +351,11 @@ static NSString *kUrlHead = @"https://zaporbit.com/api/";
 				UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag: 10];
 				imageView.image = [[UIImage imageNamed:@"749-inbox"] imageWithTintColor:[UIColor colorWithRed:0 green:100/255.f blue:1 alpha:1]];
 			} else if (indexPath.row == 1) {
-				cell.textLabel.text = @"Bought Items";
+				cell.textLabel.text = @"Purchases";
 				UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag: 10];
 				imageView.image = [[UIImage imageNamed:@"710-folder"] imageWithTintColor:[UIColor colorWithRed:0 green:100/255.f blue:1 alpha:1]];
 			} else if (indexPath.row == 2) {
-				cell.textLabel.text = @"Sold Items";
+				cell.textLabel.text = @"Sales";
 				UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag: 10];
 				imageView.image = [[UIImage imageNamed:@"710-folder"] imageWithTintColor:[UIColor colorWithRed:0 green:100/255.f blue:1 alpha:1]];
 			} else if (indexPath.row == 3) {
