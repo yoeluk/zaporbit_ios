@@ -14,7 +14,7 @@
 		<string>https://github.com/yoeluk/zaporbit_ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>ZapOrbit.xcodeproj/project.xcworkspace</string>
+	<string>ZapOrbit.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>876C53F69F2E5C111D2951045734A3BF0BE17ACD</key>

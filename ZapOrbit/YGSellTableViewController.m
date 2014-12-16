@@ -65,7 +65,7 @@
 	if ([userInfo user]) {
 		[self cancelImageDownloading];
 		YGWebService *ws = [YGWebService initWithDelegate:self];
-		[ws getItemsForUser:[NSString stringWithFormat:@"listingsbyuser/0/1/%ld", (long)userInfo.user.id] :@"GET"];
+		[ws getItemsForUser:@"listingsbyuser/0/1" :@"GET"];
 		
 		[self.progressView setHidden:NO];
 		[self.progressView setProgress:0.4 animated:YES];

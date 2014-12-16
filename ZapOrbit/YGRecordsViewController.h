@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Lewis Dots. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "ListingRecord.h"
 #import "VALabel.h"
 #import "YGDetailItemController.h"
@@ -14,10 +13,8 @@
 #import "GCPlaceholderTextView.h"
 #import "YGUserInfo.h"
 
-static NSString *kApiUrl = @"https://zaporbit.com/api/";
-
 @interface YGRecordsViewController : UIViewController <UITextViewDelegate> {
-	//@protected
+	@protected
 	NSInteger pendingCount;
 	NSInteger processingCount;
 	NSInteger completedCount;
@@ -32,6 +29,8 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	YGUserInfo *userInfo;
 	NSArray *completedFeedback;
 	NSArray *failedFeedback;
+	NSString *kApiUrl;
+	NSURLSessionConfiguration *sessionConfig;
 }
 
 @property (strong, nonatomic) id scrollingObserver;

@@ -10,8 +10,8 @@
 #import "ListingRecord.h"
 #import "RNEncryptor.h"
 
-//static NSString *baseUrl = @"https://zaporbit.com/";
-static NSString *baseUrl = @"http://100.0.0.22:9000/";
+static NSString *baseUrl = @"https://zaporbit.com/";
+//static NSString *baseUrl = @"http://100.0.0.22:9000/";
 
 static NSMutableDictionary *tokenData;
 
@@ -292,6 +292,7 @@ static NSString *password = @"bjmlBqAfiBEQ4oZfaGtI0oMcd5IGkCp";
 	NSURL *serverURL = [NSURL URLWithString:urlString];
 	[request setURL:serverURL];
 	[request setHTTPMethod:method];
+	[request setValue:tokenData[@"token"] forHTTPHeaderField:@"X-Auth-Token"];
 	
 	[NSURLConnection sendAsynchronousRequest:request
 									   queue:[NSOperationQueue mainQueue]

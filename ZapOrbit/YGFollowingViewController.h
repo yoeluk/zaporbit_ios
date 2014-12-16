@@ -15,6 +15,7 @@
 	NSMutableArray *ZOFriends;
 	AppSettings *appSettings;
 	YGUserInfo *userInfo;
+	NSString *kUrlHead;
 }
 
 - (IBAction)followFriendAction:(id)sender;

@@ -243,7 +243,7 @@
 /* END POSTING LISTING */
 
 -(NSString*)generateRandomString:(int)num {
-	NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@*_$";
+	NSString *letters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@*_$";
     NSMutableString* string = [NSMutableString stringWithCapacity:(NSUInteger) num];
     for (int i = 0; i < num; i++) {
         [string appendFormat:@"%C", [letters characterAtIndex:arc4random() % [letters length]]];

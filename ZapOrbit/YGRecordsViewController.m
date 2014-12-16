@@ -8,6 +8,7 @@
 
 #import "YGRecordsViewController.h"
 #import "YGStarRateView.h"
+#import "YGWebService.h"
 //#import "YGBlockerView.h"
 
 @interface YGRecordsViewController ()
@@ -28,6 +29,11 @@
 	processingCount = [(NSMutableArray *) (self.records)[@"processingRecords"] count];
 	completedCount = [(NSMutableArray *) (self.records)[@"completedRecords"] count];
 	failedCount = [(NSMutableArray *) (self.records)[@"failedRecords"] count];
+	
+	kApiUrl = [YGWebService baseApiUrl];
+	sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+	NSString *token = [YGWebService tokenData][@"token"];
+	sessionConfig.HTTPAdditionalHeaders = @{@"X-Auth-Token": token};
 	
 	priceFormatter = [[NSNumberFormatter alloc] init];
 	[priceFormatter setNumberStyle:NSNumberFormatterCurrencyStyle];

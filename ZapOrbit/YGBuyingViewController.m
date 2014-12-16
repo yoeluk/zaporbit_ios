@@ -68,7 +68,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Ok, delete it"] && actionSheet.tag != 0) {
 		NSURL *delURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@canceltransaction/%ld", kApiUrl, (long)actionSheet.tag]];
-		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:delURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:sessionConfig] dataTaskWithURL:delURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			if ([(NSHTTPURLResponse *)response statusCode] == 200 && data) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					[((YGHomeViewController *)[self.navigationController childViewControllers][self.navigationController.childViewControllers.count-2]) getUsersRecords:0];
@@ -83,7 +83,7 @@
 		
 	} else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Back down"]  && actionSheet.tag != 0) {
 		NSURL *completeURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@backdownfromdeal/%ld", kApiUrl, (long)actionSheet.tag]];
-		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:completeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:sessionConfig] dataTaskWithURL:completeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			if ([(NSHTTPURLResponse *)response statusCode] == 200 && data) {
 				NSLog(@"transaction failed");
 				dispatch_async(dispatch_get_main_queue(), ^{

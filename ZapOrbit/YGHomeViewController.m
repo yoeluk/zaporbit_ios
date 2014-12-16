@@ -7,10 +7,7 @@
 //
 
 #import "YGHomeViewController.h"
-#import <GoogleOpenSource/GoogleOpenSource.h>
 #import "YGInboxViewController.h"
-
-static NSString *const kGoogleClientId = @"252408930349-1otbutcank3df2grgcav7djt4o7c6trc.apps.googleusercontent.com";
 
 @interface YGHomeViewController ()
 

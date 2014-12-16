@@ -79,7 +79,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Accept"] && actionSheet.tag) {
 		NSURL *acceptURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@accepttransaction/%ld", kApiUrl, (long)actionSheet.tag]];
-		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:acceptURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:sessionConfig] dataTaskWithURL:acceptURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			if ([(NSHTTPURLResponse *)response statusCode] == 200 && data) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					[((YGHomeViewController *)[self.navigationController childViewControllers][self.navigationController.childViewControllers.count-2]) getUsersRecords:0];
@@ -90,7 +90,7 @@
 		[session resume];
 	} else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Reject"]  && actionSheet.tag != 0) {
 		NSURL *completeURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@canceltransaction/%ld", kApiUrl, (long)actionSheet.tag]];
-		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:completeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:sessionConfig] dataTaskWithURL:completeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			if ([(NSHTTPURLResponse *)response statusCode] == 200 && data) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					[((YGHomeViewController *)[self.navigationController childViewControllers][self.navigationController.childViewControllers.count-2]) getUsersRecords:0];
@@ -101,7 +101,7 @@
 		[session resume];
 	} else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Mark as completed"]  && actionSheet.tag != 0) {
 		NSURL *completeURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@completetransaction/%ld", kApiUrl, (long)actionSheet.tag]];
-		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:completeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:sessionConfig] dataTaskWithURL:completeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			if ([(NSHTTPURLResponse *)response statusCode] == 200 && data) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					[((YGHomeViewController *)[self.navigationController childViewControllers][self.navigationController.childViewControllers.count-2]) getUsersRecords:0];
@@ -112,7 +112,7 @@
 		[session resume];
 	} else if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:@"Back down"]  && actionSheet.tag != 0) {
 		NSURL *completeURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@backdownfromdeal/%ld", kApiUrl, (long)actionSheet.tag]];
-		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]] dataTaskWithURL:completeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		NSURLSessionDataTask *session = [[NSURLSession sessionWithConfiguration:sessionConfig] dataTaskWithURL:completeURL completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
 			if ([(NSHTTPURLResponse *)response statusCode] == 200 && data) {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					NSLog(@"transaction failed");
@@ -165,7 +165,7 @@
 	[request setURL:url];
 	[request setHTTPMethod:@"POST"];
 	[request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-	[request setValue:@"application/json" forHTTPHeaderField:@"content-type"];
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
 	[request setHTTPBody:jsonData];
 	
     NSURLSessionDataTask * dataTask = [defaultSession dataTaskWithRequest:request

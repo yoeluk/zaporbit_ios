@@ -358,8 +358,6 @@
 		296FA3B218E4B5F900711E13 /* ios7_sent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios7_sent.png; sourceTree = "<group>"; };
 		296FA3B418E4B8D900711E13 /* ios7_bin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios7_bin.png; sourceTree = "<group>"; };
 		296FA3B618E4C8A200711E13 /* ios7_key.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios7_key.png; sourceTree = "<group>"; };
-		296FA3B818E4E2BF00711E13 /* gpp_sign_in_dark_button_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gpp_sign_in_dark_button_normal.png; path = GooglePlus.bundle/gpp_sign_in_dark_button_normal.png; sourceTree = "<group>"; };
-		296FA3B918E4E2BF00711E13 /* gpp_sign_in_dark_button_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gpp_sign_in_dark_button_normal@2x.png"; path = "GooglePlus.bundle/gpp_sign_in_dark_button_normal@2x.png"; sourceTree = "<group>"; };
 		296FA3BC18E4E6B500711E13 /* YGLoginOptionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YGLoginOptionsController.h; sourceTree = "<group>"; };
 		296FA3BD18E4E6B500711E13 /* YGLoginOptionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YGLoginOptionsController.m; sourceTree = "<group>"; };
 		296FA3C118E4FDC900711E13 /* ios7_friends.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios7_friends.png; sourceTree = "<group>"; };
@@ -873,8 +871,6 @@
 				2929FDAD1911AFD300CF2D1B /* profile-placeholder2.png */,
 				299CB95518F6865700273572 /* 845-location-target@2x.png */,
 				296FA42918E5C99300711E13 /* 1396037708_add_photo.png */,
-				296FA3B818E4E2BF00711E13 /* gpp_sign_in_dark_button_normal.png */,
-				296FA3B918E4E2BF00711E13 /* gpp_sign_in_dark_button_normal@2x.png */,
 				2996C7B018D4691900873252 /* next@2x.png */,
 				2996C7AE18D468B700873252 /* back@2x.png */,
 				296FA40B18E5A29200711E13 /* 895-user-group@2x.png */,

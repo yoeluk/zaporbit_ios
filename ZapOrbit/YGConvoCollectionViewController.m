@@ -24,12 +24,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+	
+	//self.collectionView.frame = self.view.frame;
 
     self.listLayout = [[UICollectionViewFlowLayout alloc] init];
     self.listLayout.itemSize = CGSizeMake(305, 74);
     self.listLayout.minimumLineSpacing = 5;
     self.listLayout.minimumInteritemSpacing = 5;
-    self.listLayout.headerReferenceSize = CGSizeMake(310, 54);
     self.collectionView.collectionViewLayout = self.listLayout;
 
     self->userInfo = [YGUserInfo sharedInstance];
@@ -125,7 +126,7 @@
 
 - (void)messagesHeights {
     [self->messagesHeights removeAllObjects];
-    CGRect frame = CGRectMake(0, 0, 260, 26);
+    CGRect frame = CGRectMake(0, 0, 270, 26);
     UILabel *messageLabel = [[UILabel alloc] initWithFrame:frame];
     messageLabel.numberOfLines = 0;
     NSMutableParagraphStyle *messageStyle = [[NSMutableParagraphStyle alloc] init];
@@ -137,6 +138,7 @@
         messageLabel.attributedText = [[NSAttributedString alloc] initWithString:message[@"message"] attributes:attrs];
         [messageLabel sizeToFit];
         [messagesHeights addObject:@(messageLabel.bounds.size.height)];
+		
     }
 }
 

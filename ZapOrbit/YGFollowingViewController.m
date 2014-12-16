@@ -8,8 +8,7 @@
 
 #import "YGFollowingViewController.h"
 #import "YGAppDelegate.h"
-
-static NSString *kApiUrl = @"https://zaporbit.com/api/";
+#import "YGWebService.h"
 
 @interface YGFollowingViewController ()
 
@@ -45,6 +44,8 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	
 	self.titleBarButton.customView = infoLabel;
 	self.tableView.contentInset = UIEdgeInsetsMake(10, 0, 0, 0);
+	
+	self->kUrlHead = [YGWebService baseApiUrl];
 }
 
 - (void)didReceiveMemoryWarning
@@ -132,14 +133,14 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 	NSMutableArray *followTheseFriends = [NSMutableArray new];
 	NSNumber *userid = @((long long) userInfo.user.id);
 	for (NSString *friendId in self->appSettings.followingFriends) {
-		NSDictionary *friend = @{@"userid" : userid, @"friendid" : @([friendId longLongValue])};
+		NSDictionary *friend = @{@"userid" : userid, @"friendfbid" : friendId};
 		[followTheseFriends addObject:friend];
 	}
 	
 	NSURLSessionConfiguration *defaultConfigObject = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *defaultSession = [NSURLSession sessionWithConfiguration: defaultConfigObject delegate:nil delegateQueue:[NSOperationQueue mainQueue]];
 	
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@followthesefriends/%llu", kApiUrl, (long long)userInfo.user.id]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@followthesefriends/%llu", self->kUrlHead, (long long)userInfo.user.id]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	
 	NSError *error = nil;
@@ -157,10 +158,10 @@ static NSString *kApiUrl = @"https://zaporbit.com/api/";
 															if(error == nil && [(NSHTTPURLResponse *)response statusCode] == 200) {
 																NSMutableDictionary *dataObj = (NSMutableDictionary *)[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves error:nil];
 																if ([dataObj[@"status"] isEqualToString:@"OK"]) {
-																	//NSLog(@"following friends updated: %@", dataObj);
+																	NSLog(@"following friends updated: %@", dataObj);
 																	[self.navigationController popViewControllerAnimated:YES];
 																}
-															}
+															} else NSLog(@"%@", error);
 															
 														}];
     [dataTask resume];
